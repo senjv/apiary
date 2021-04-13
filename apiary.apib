@@ -1,0 +1,994 @@
+FORMAT: 1A
+HOST: https://api.promotexter.com/
+
+# Promotexter Messaging API
+
+Promotexter API supports sending of messages through various channels such as SMS, Email, and Viber which revolves around [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer).
+
+
+## Account Registration
+
+Connecting to us is easy.
+
+Create an account by signing-up at: **https://portal.promotexter.com/signup**
+
+Your account shall grant you access to the API, web-based portal, and other Promotexter services.
+
+
+## Base URL
+
+All requests must be sent over HTTPS with base URL ``` https://api.promotexter.com ``` in ```POST``` method.
+
+
+## Authentication
+
+You may generate your authentication keys via the Promotexter Portal. When sending requests, these keys must be supplied in your request.
+
+| Parameter     | Required | Data Type | Description                        |
+|-------------  |----------|-----------|------------------------------------|
+| apiKey        | Yes      | Unique    | Your API key               |
+| apiSecret     | Yes      | Unique    | Your secret key          |
+ 
+
+Note: Authentication keys must be kept confidential at all times.
+
+## Balance Inquiry [/api/account/balance{?apiKey}{?apiSecret}]
+
+This allows you to inquire your current account balance.
+
++ Model (application/json)
+
+        {
+            "availableBalance": 1943176.23,
+            "accountBalance": -56814.65,
+            "creditLimit": 2000000,
+            "withheld": 9.12
+        }
+
+
+### Get balance [GET]
+
+```GET /api/account/balance ```
+
+
+**Request Parameters**
+
+| Parameter     | Required | Data Type | Description                        |
+|-------------  |----------|-----------|------------------------------------|
+| apiKey        | Yes      | Unique    | Your API key.                |
+| apiSecret     | Yes      | Unique    | Your secret key.             |
+
++ Parameters
+    + apiKey (string) - User API key
+    + apiSecret (string) - User secret key
+    
++ Response 200
+
+    [Balance Inquiry][]
+
++ Response 422 (application/json)
+
+            {
+                  "message": "<Error message>"
+            }
+
+
+# Group Viber Business Messaging with SMS Fallback
+
+## Single Viber Transaction [/viber/send{?apiKey}{?apiSecret}{?from}{?to}{?text}{?type}{?image}{?caption}{?url}{?ttl}{?dlrCallback}{?referenceId}{?sms_from}{?sms_text}{?filter}]
+
+This allows you to send Viber Business Message to one local mobile number per request with an option to send the message as SMS when recipient cannot be reached through Viber after the indicated message lifetime.
+
++ Model (application/json)
+
+    ```js
+    {
+        "id": "ab123524523cde134342343211342",
+        "remainingBalance": 100.00
+        "referenceId": "myownid",
+        "unitCost": 0.50,
+        "transactionCost": 0.50,
+        "operatorCode": "PHLSMART",
+        "messageParts": 1,
+        "from" : "DEMO",
+        "to" : "639170000001"
+    }
+    ```
+
+
+### Send Viber with SMS Fallback [POST]
+
+``` POST /viber/send ```
+
+
+**Request Parameters**
+
+| Parameter     | Required | Data Type | Description           |
+| --------------| -------  | ------- | ------------------------------ |
+| apiKey        |   Yes    | Unique  | Your API Key.  |
+| apiSecret     |   Yes    | Unique  | Your Secret Key |
+| from          |   Yes    |         | Your Viber ID. This would appear as the sender of the message. Value must be whitelisted to your account. |
+| to            |   Yes    |         | Recipient of the message. Must be a valid mobile number. |
+| text          |   Yes    | String  | Viber text content. Up to 1000 characters.|
+| type          |   No     | String  | Transaction type. Possible values: `Transactional` or `Promotional`|
+| image         |          | String  | URL of Viber image content.|
+| caption       |          | String  | Call to action button label.|
+| url           |          | String  | Call to action button URL.|
+| ttl           |   No     |         | Message lifetime value in seconds. (Note: TTL less than the minimum allowable value is masked to 30 seconds.)|
+| dlrCallback   |   No     |         | Your own API endpoint where we will be sending DLR notifications. This overrides account settings. |
+| eventCallback |   No     |         | Your own API endpoint where we will be sending event notifications. |
+| referenceId   |   No     |         | Your own reference ID to the transaction. |
+| categoryId    |   No     |         | Your own grouping ID to the transaction. |
+| sms_from      |   No     | String  | SMS Sender Name. This must be whitelisted to your account.|
+| sms_text      |   No     | String  | SMS Fallback message content. Up to 10-message parts (1530 standard-GSM or 670 Unicode characters).|
+<!--| async         |   No     | Boolean | If set to "1", only transactionId will be returned in our response. |-->
+
+**Allowed Content Combinations**
+
+| Content      |
+| -------------| 
+| Text only    |
+| Image only   |
+| Button only  |
+| Text + button |
+| Image + button |
+| Text + image + button |
+
+
+
+**DLR Notification**
+
+Promotexter can send DLR notifications to your own APIs if you have enabled it on your Account settings or added as a parameter in the request.
+
+Your callback URL must contain the following placeholder values:
+
+| Placeholder | Code | Description                                       |
+| ------------| -----|-------------------------------------------------- |
+| %s | status | DLR Status | Placeholder for DLR status code.            |
+| %i | id | Placeholder for the transaction ID.                          |
+| %r | referenceId | Placeholder for the reference ID if it has value.   |
+| %d | date | Placeholder for the date the DLR is received (UTC).        |
+| %tr | transactionType | Placeholder for the type of channel to which the transaction is delivered.|
+
+If you have a callbackUrl of: 
+
+`http://example.com?status=%s&id=%i&referenceId=%r&date=%d&transactionType=%tr` 
+
+the DLR notification would be:
+
+`http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&date=20180101082355&transactionType=viber`
+
+If you have a callbackUrl without the placeholders: 
+
+`http://example.com` 
+
+the DLR notification would be:
+
+`http://example.com?_status=1&_id=248bfa2341293ad9sada&_date=20180101082355`
+
+
+
+**Event Notification**
+
+Promotexter can send event notifications to your own APIs if you have added it as a parameter in the request.
+
+If you have a callbackUrl of: 
+
+`http://example.com` 
+
+the event notification would be:
+
+`http://example.com?_status=8000&_id=248bfa2341293ad9sada&_date=20180101082355`
+
++ Parameters
+    + apiKey (string) - User API key
+    + apiSecret (string) - User secret key
+    + from (string) - Sender ID
+    + to (string) - Recipient 
+    + text (string) - The actual text message
+    + type (string) - Transactional or Promotional
+    + image (string) - URL of the image
+    + caption (string) - Label for the CTA button
+    + url (string) - URL of the CTA button
+    + ttl (integer) - Message lifetime in seconds
+    + dlrCallback (optional, url) - API endpoint
+    + referenceId (optional, string) - Reference ID for the transaction.
+    + sms_from (optional, string) - SMS Sender Name.
+    + sms_text (optional, string) - SMS Fallback message content.
+    <!--+ async (optional, boolean) - Asynchronuos mode-->
+    
++ Response 200
+
+    Received on malformed JSON in the request.
+    
+    + Body
+        
+            {
+                "transactionId": "ab123524523cde134342343211342"
+            }
+        
+
+
+# Group SMS Messaging
+
+## Single SMS Transaction [/sms/send{?apiKey}{?apiSecret}{?from}{?to}{?text}{?dlrReport}{?dlrCallback}{?pageSize}{?pageNumber}{?sortColumn}{?id}{?referenceId}{?categoryId}{?requestId}{?filter}{?async}{?priority}]
+
+This allows you to send SMS to one local or international mobile number per request.
+
++ Model (application/json)
+
+    ```js
+    {
+        "id": "ab123524523cde134342343211342",
+        "remainingBalance": 100.00
+        "referenceId": "myownid",
+        "unitCost": 0.50,
+        "transactionCost": 0.50,
+        "operatorCode": "PHLSMART",
+        "messageParts": 1,
+        "from" : "DEMO",
+        "to" : "639170000001"
+    }
+    ```
+
+
+### Send SMS [GET]
+
+``` POST /api/sms/send```
+
+
+**Request Parameters**
+
+| Parameter     | Required | Data Type | Description           |
+| --------------| -------  | ------- | ------------------------------ |
+| apiKey        |   Yes    | Unique  | Your API Key.  |
+| apiSecret     |   Yes    | Unique  | Your Secret Key |
+| from          |   Yes    |         | Sender ID. This would appear as the sender of the message. Value must be whitelisted to your account. |
+| to            |   Yes    |         | Recipient of the message. Must be a valid mobile number. |
+| text          |   Yes    |         | Message content. Maximum of 10 parts (1530 standard-GSM or 670 Unicode characters) per transaction.
+| dlrReport     |   No     | Boolean | Must be set to "1" if you want to receive DLR notifications to the indicated `dlrCallback`. This overrides account settings.  |
+| dlrCallback   |   No     |         | Your own API endpoint where we will be sending DLR notifications. This overrides account settings. |
+| referenceId   |   No     |         | Your own reference ID to the transaction. |
+| categoryId    |   No     |         | Your own grouping ID to the transaction.|
+<!--| async         |   No     | Boolean | If set to "1", only transactionId will be returned in our response. |-->
+
+**Limitations**
+
+| Type          | Description           |
+| --------------| ----------------------------------- |
+| Throughput    | The default TPS throughput is 5. You can reach out to Promotexter Support should there be a need to increase allocation.      |
+| Concurrency   | The default TPS throughput is 5. You can reach out to Promotexter Support should there be a need to increase allocation.  |
+
+
+
+
+
+
+**DLR Notification**
+
+Promotexter can send DLR notifications to your own APIs if you have enabled it on your Account settings or added as a parameter in the request.
+
+Your callback URL must contain the following placeholder values:
+
+| Placeholder | Code | Description                                       |
+| ------------| -----|-------------------------------------------------- |
+| %s | status | DLR Status | Placeholder for DLR status code.            |
+| %i | id | Placeholder for the transaction ID.                          |
+| %r | referenceId | Placeholder for the reference ID if it has value.   |
+| %d | date | Placeholder for the date the DLR is received (UTC).        |
+| %tr | transactionType | Placeholder for the type of channel to which the transaction is delivered.|
+| %f | from | Placeholder for senderId.        |
+| %t | to | Placeholder for the recipient.        |
+| %c | categoryId | Placeholder for clients additional params for other reference.        |
+
+If you have a callbackUrl of: 
+
+`http://example.com?status=%s&id=%i&referenceId=%r&date=%d&transactionType=%tr` 
+
+the DLR notification would be:
+
+`http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&date=20180101082355&transactionType=sms&from=Demo&to=09998998888`
+
+If you have a callbackUrl without the placeholders: 
+
+`http://example.com` 
+
+the DLR notification would be:
+
+`http://example.com?_status=1&_id=248bfa2341293ad9sada&_date=20180101082355&referenceId=123abc&date=20180101082355&transactionType=sms&from=Demo&to=09998998888`
+
++ Parameters
+    + apiKey (string) - User API key
+    + apiSecret (string) - User secret key
+    + from (string) - Sender ID
+    + to (string) - Recipient 
+    + text (string) - The actual text message
+    + dlrReport (optional, boolean) - Flag to get DLR notification
+    + dlrCallback (optional, url) - API endpoint
+    + referenceId (optional, string) - Reference ID for the transaction.
+    + categoryId (optional, string) - Category ID for the transaction
+    <!--+ async (optional, boolean) - Asynchronuos mode-->
+    
++ Response 200
+
+    Received on malformed JSON in the request.
+    
+    + Body
+        
+            {
+                "transactionId": "ab123524523cde134342343211342",
+                "remainingBalance": 100.00,
+                "referenceId": "myownid",
+                "unitCost": 0.50,
+                "transactionCost": 0.50,
+                "operatorCode": "PHLSMART",
+                "messageParts": 1,
+                "from" : "DEMO",
+                "to" : "639170000001"
+            }
+        
+
++ Response 422 (application/json)
+
+            {
+                "code": "<Error code>"
+                "message": "<Error message>"
+            }
+
+### Retrieve Transactions [GET]
+
+This allows you to retrieve transactions via a single API call.
+
+``` GET /api/sms ```
+
+**Request Parameters**
+
+| Parameter     | Required           | Default      | Description           |
+| ----------    |--------------------|--------------    | ------------------------------ |
+| apiKey        | Yes                |                  | User API Key  |
+| apiSecret     | Yes                |                  | User secret key |
+| pageSize      | No                 |      10          | How many items per page.|
+| pageNumber    | No                 |      1           | Specify the page number.|
+| sortColumn    | No                 |  dateCreated     | Specify the sort column. |
+| sortDirection | No                 |  descending      | Specify the page number. |
+
+
+**Available Filters**
+| Parameter             |       Required            | Description           |
+| --------------------- | ------------------------- | ------------------------------ |
+| filter[dateCreatedGt] | No                        | Filter transactions with creation date greater than this value.  |
+| filter[dateCreatedLt] | No                        | Filter transactions with creation date lesser than this value.  |
+| filter[transactionId] | No                        | Specific transactionId lookup  |
+| filter[referenceId]   | No                        | Specific referenceId lookup  |
+| filter[categoryId]    | No                        | Specific categoryId lookup  |
+| filter[requestId]     | No                        | Specific requestId lookup  |
+| filter[from]          | No                        | Filter by "from" parameter |
+| filter[to]            | No                        | Filter by "to" parameter  |
+
+
++ Parameters
+    + apiKey (string) - User API key
+    + apiSecret (string) - User secret key
+    + pageSize (optional, number) - How many items per page.
+        + Default: `10`
+    + pageNumber (optional, number) - Specify the page number.
+        + Default: `1`
+    + sortColumn (optional, number) - Specify the sort column.
+        + Default: `dateCreated`
+    + filter (optional, array) - Filter array, a combination of filters
+    
+    
+
++ Response 200 (application/json)
+
+        {
+          "status": true,
+          "totalRows": 1,
+          "totalPages": 1,
+          "pageNumber": 1,
+          "hasPrevious": false,
+          "previousPage": null,
+          "hasNext": false,
+          "nextPage": null,
+          "pageSize": 10,
+          "itemsOnPage": 1,
+          "sortColumn": null,
+          "sortDirection": "desc"
+          "filter": {
+            "to": "6391731710538"
+          },
+          "data": [
+            {
+              "id": "20180307090240SENDERTEST6391731710538",
+              "requestId": "9c0dec49-3b6c-45d4-a008-26823aaea1c1",
+              "categoryId": "X",
+              "from": "TESTSMS",
+              "to": "6391731710538",
+              "text": "a",
+              "messageParts": 1,
+              "price": 0.65,
+              "dateCreated": "2018-03-07T13:02:40.797Z",
+              "dateSent": "2018-03-07T13:02:40.884Z",
+              "sendStatus": 0,
+              "dlrStatus": 32
+            },
+            {
+              "id": "20180307090240SENDERTEST6391731710538",
+              "requestId": "9c0dec49-3b6c-45d4-a008-26823aaea1c1",
+              "categoryId": "X",
+              "from": "TESTSMS",
+              "to": "6391731710538",
+              "text": "a",
+              "messageParts": 1,
+              "price": 0.65,
+              "dateCreated": "2018-03-07T13:02:40.797Z",
+              "dateSent": "2018-03-07T13:02:40.884Z",
+              "sendStatus": 0,
+              "dlrStatus": 32
+            },
+            {
+              "id": "20180307090240SENDERTEST6391731710538",
+              "requestId": "9c0dec49-3b6c-45d4-a008-26823aaea1c1",
+              "categoryId": "X",
+              "from": "TESTSMS",
+              "to": "6391731710538",
+              "text": "a",
+              "messageParts": 1,
+              "price": 0.65,
+              "dateCreated": "2018-03-07T13:02:40.797Z",
+              "dateSent": "2018-03-07T13:02:40.884Z",
+              "sendStatus": 0,
+              "dlrStatus": 32
+            }
+          ]
+        }
+   
+        
+## Batch SMS [/batchsms{?apiKey}{?apiSecret}{?from}{?to}{?text}{?dlrReport}{?dlrCallback}{?referenceId}{?categoryId}{?requestId}{?filter}{?async}{?priority}{?status}{?messages}]
+
+### Send Batch SMS [POST]
+
+This allows you to send multiple* SMS transactions in a single API request.
+
+*Up to 6000 unique transactions or the maximum payload capacity of 1 million characters.
+
+
+``` POST /api/batchsms ```
+
+
+**Request Parameters**
+
+| Parameter     | Required           | Description           |  
+| --------------| ------------------ |------------------------------ |
+| apiKey        | Yes                | User API Key  |
+| apiSecret     | Yes                | User secret key |
+| messages      | Yes                | An array of from,to,text values |
+| from          | Yes                | Sender ID. This would appear as the sender of the message. Value must be whitelisted to the account. |
+| to            | Yes                | Recipient of the message. Must be a valid mobile number. |
+| text          | Yes                | Message content. Maximum of 10 parts (1530 standard-GSM or 670 Unicode characters) per transaction.
+| dlrReport     | No                 | Must be set to True if you want to receive Delivery Report to the indicated dlrCallback. This overrides account settings.  |
+| dlrCallback   | No                 | Your own API endpoint where we will be sending the DLR notifications. This overrides account settings. |
+| referenceId   | No                 | Your own reference id to the transaction |
+| categoryId    | No                 | Your own grouping id to the transaction |
+| async         | No                 | If set to True, response will be limited to requestId |
+
+**Note:**
+The following could be set as a global field and values shall therefore be applied to all transactions.
+
+| Parameter     | Required |
+| --------------| ------------------ |
+| from          | Yes                | 
+| to            | Yes                |
+| text          | Yes                |
+| dlrCallback   | No                 | 
+
+
+
++ Parameters
+    + apiKey (string) - User API key
+    + apiSecret (string) - User secret key
+    + messages (array) - Array of values
+    + from (string) - Sender ID
+    + to (string) - Recipient 
+    + text (string) - Message content
+    + dlrReport (optional, boolean) - Flag to get DLR notification
+    + dlrCallback (optional, url) - API endpoint
+    + referenceId (optional, string) - Reference ID for the transaction
+    + categoryId (optional, string) - Category ID for the transaction
+    + async (optional, boolean) - Asynchronuos mode
+    
++ Request (application/json)
+     ```js
+    {
+        "apiKey": "c431941b81232e69f7a368176f48dc5f4",
+        "apiSecret": "b14c27ea4482ddb432dc05332ea278896",
+        "messages": [
+        {
+            "from": "TESTSMS", "to": "09151234567", "text": "This is test only."
+        },
+        {
+            "from": "TESTSMS", "to": "09151234567", "text": "This is test only."
+        },
+        {
+            "from": "TESTSMS", "to": "09151234567", "text": "This is test only."
+        }
+                    ]
+    }
+    ```
+    
++ Response 200 (application/json)
+
+    ```js 
+   {
+    "requestId": "44d6cb22-d259-4140-8fdf-b0c7cad17bcf",
+    "remainingBalance": 49952.34999999994,
+    "smsBatch":
+    [
+        {
+            "transactionId": "201808131003390000000DEMO000063915123456759",
+            "unitCost": 2,
+            "transactionCost": 2,
+            "operatorCode": "PHL_GLOBE",
+            "messageParts": 1,
+            "from": "TESTSMS",
+            "to": "639151234567",
+            "country": "Philippines",
+            "operator": "PHL_GLOBE"
+        },
+        {
+            "transactionId": "201808131003390000000DEMO0000639151234567CA",
+            "unitCost": 2,
+            "transactionCost": 2,
+            "operatorCode": "PHL_GLOBE",
+            "messageParts": 1,
+            "from": "TESTSMS",
+            "to": "639151234567",
+            "country": "Philippines",
+            "operator": "PHL_GLOBE"
+        },
+        {
+            "transactionId": "201808131003390000000DEMO000063915123456706",
+            "unitCost": 2,
+            "transactionCost": 2,
+            "operatorCode": "PHL_GLOBE",
+            "messageParts": 1,
+            "from": "TESTSMS",
+            "to": "639151234567",
+            "country": "Philippines",
+            "operator": "PHL_GLOBE"
+        }
+    ]
+}
+    ```
+
+### Cancel Batch SMS Request [PUT]
+
+This allows you to cancel queued batch SMS transactions.
+
+
+``` PUT /api/batchsms ```
+
+
+**Request Parameters**
+
+| Parameter     | Description                    |
+| --------------| ------------------------------    |
+| apiKey        | User API Key                      |
+| apiSecret     | User secret key                   |
+| status        | Value must be set to `cancelled`  |
+| requestId     | requestId to be cancelled         |
+
++ Response 200 (application/json)
+
+        {
+            status: "cancelled",
+            requestId: "9c0dec49-3b6c-45d4-a008-26823aaea1c1"
+        };
+    
+
++ Parameters
+    + apiKey (string) - User API key
+    + apiSecret (string) - User secret key
+    + status (string) - cancelled 
+    + requestId (string) - Generated requestId
+    
+# Group 2-way SMS 
+
+##Receive messages via a dedicated Virtual Reply Number
+*VRNs may be requested through your Account Manager (sales@promotexter.com)
+
+##Forward incoming messages to your webhook in real-time
+Set up your account webhook with the following placeholders:
+
+`https://example.com?message=%message%&to=%to%&from=%from%` 
+
+| Placeholder | Code | Description                                       |
+| ------------| -----|-------------------------------------------------- |
+| `%message%`   | message | Content of the incoming message.               |
+| `%to%`      | to   | VRN assigned to your account.                     |
+| `%from%`      | from | Customer mobile number.                           |
+
+
+# Group Two-Factor Authentication Service
+
+## Generate Code [/twofa/generate{?apiKey}{?apiSecret}{?from}{?to}{?text}{?codelength}{?codetype}{?expiration}{?dlrReport}{?dlrCallback}{?pageSize}{?pageNumber}{?sortColumn}{?id}{?referenceId}{?categoryId}{?requestId}{?filter}{?async}{?priority}]
+
+This allows you to generate code and send SMS to one local or international mobile number per transaction.
+
+### Generate API [POST]
+
+``` POST /twofa/generate ```
+
+**Request Parameters**
+
+| Parameter     | Required | Data Type | Description           |
+| --------------| -------  | ------- | ------------------------------ |
+| apiKey        |   Yes    | Unique  | Your API Key.  |
+| apiSecret     |   Yes    | Unique  | Your Secret Key. |
+| from          |   Yes    |         | Sender ID. This would appear as the sender of the message. This must be whitelisted to your account. |
+| to            |   Yes    |         | Recipient of the message. Must be a valid mobile number. |
+| text          |   Yes    |         | Message content. Must include the placeholder for code `%code%`. Should be limited to 140 GSM characters per transaction.|
+| codelength    |   No     | Integer | Length of the code to be generated. Default value: 4. Min: 3, Max: 20. |
+| codetype      |   No     | String  | Type of code to be generated. Default value: numeric. Possible values: numeric, alphanumeric, alpha. |
+| expiration    |   No     | Integer | Expiration of the transaction. Default value of 300 seconds. Min: 30, Max: 86400. |
+| dlrReport     |   No     | Boolean | Must be set to "1" if you want to receive DLR notifications to the indicated dlrCallback. This overrides account settings.  |
+| dlrCallback   |   No     |         | Your own API endpoint where we will be sending DLR notifications. This overrides account settings. |
+| referenceId   |   No     |         | Your own reference ID to the transaction. Up to 60 characters.|
+
+
+**DLR Notification**
+
+Promotexter can send DLR notifications to your own APIs if you have enabled it on your Account settings or added as a parameter in the SMS request.
+
+Your callback URL must contain the following placeholder values:
+
+| Placeholder | Code | Description                                       |
+| ------------| -----|-------------------------------------------------- |
+| %s | status | DLR Status | Placeholder for DLR status code.            |
+| %i | id | Placeholder for the transaction ID.                          |
+| %r | referenceId | Placeholder for the reference ID if it has value.   |
+| %d | date | Placeholder for the date the DLR is received (UTC).        |
+
+If you have a callbackUrl of: 
+
+`http://example.com?status=%s&id=%i&referenceId=%r&date=%d` 
+
+the DLR notification would be:
+
+`http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&date=20180101082355`
+
+If you have a callbackUrl without the placeholders: 
+
+`http://example.com` 
+
+the DLR notification would be:
+
+`http://example.com?_status=1&_id=248bfa2341293ad9sada&_date=20180101082355`
+
++ Parameters
+    + apiKey (string) - User API key
+    + apiSecret (string) - User secret key
+    + from (string) - Sender ID
+    + to (string) - Recipient 
+    + text (string) - The actual text message. `%code%` placeholder is required.
+    + codelength (optional, integer) - Length of the code to be generated
+    + codetype (optional, string) - Possible values: numeric, alpha, or alphanumeric
+    + expiration (optional, integer) - Code expiration in seconds. Min: 30, Max: 86400
+    + dlrReport (optional, boolean) - Flag to get DLR notification
+    + dlrCallback (optional, url) - DLR API endpoint
+    + referenceId (optional, string) - Reference ID for the transaction.
+    
++ Response 200
+
+    Received on malformed JSON in the request.
+    
+    + Body
+        
+            {
+             "id": "550c83c2-10b2-43b9-9813-dc035f0fbcab",
+             "unitCost": 1,
+             "transactionCost": 1,
+             "operatorCode": "PHL_GLOBE",
+             "messageParts": 1,
+             "from": "DEMO",
+             "to": "639171234567",
+             "remaining": 16532.997999095325,
+             "expiration": "30"
+            }
+        
+
++ Response 422 (application/json)
+
+            {
+                "code": "<Error code>"
+                "message": "<Error message>"
+            }
+
+##Verify Generated Code [/twofa/verify{?apiKey}{?apiSecret}{?id}{?code}]
+
+This allows you to verify a generated code.
+
+### Verify API [POST]
+
+``` POST /twofa/verify ```
+
+**Request Parameters**
+
+| Parameter     | Required | Data Type | Description           |
+| --------------| -------  | ------- | ------------------------------ |
+| apiKey        |   Yes    | Unique  | Your API Key.  |
+| apiSecret     |   Yes    | Unique  | Your Secret Key |
+| id            |   Yes    | String  | Transaction ID. Value should match the ID generated for the generateCode request.|
+| code          |   Yes    | String   | Code to be validated.|
+
+
++ Parameters
+    + apiKey (string) - User API key
+    + apiSecret (string) - User secret key
+    + id (string) - Transaction ID
+    + code (string) - Code to be validated 
+  
+    
++ Response 200
+
+    Received on malformed JSON in the request.
+    
+    + Body
+        
+            {
+                "message": "valid"
+            }
+        
+
++ Response 422 (application/json)
+
+            {
+                "code": "<Error code>"
+                "message": "<Error message>"
+            }
+
+# Group Email Messaging
+
+## Single Email Transaction [/email{?apiKey}{?apiSecret}{?fromEmail}{?to}{?subject}{?html}{?body}{?groupName}{?dlrReport}{?dlrCallback}{?pageSize}{?pageNumber}{?sortColumn}{?id}{?referenceId}{?categoryId}{?requestId}{?filter}{?async}{?priority}]
+
+You can use the API to send email to one recipient per transaction.
+
++ Model (application/json)
+
+    ```js
+    {
+        "id": "ab123524523cde134342343211342",
+        "remainingBalance": 100.00
+        "referenceId": "myownid",
+        "unitCost": 0.50,
+        "transactionCost": 0.50,
+        "operatorCode": "PHLSMART",
+        "messageParts": 1,
+        "from" : "DEMO",
+        "to" : "639170000001"
+    }
+    ```
+
+
+### Send Email [POST]
+
+``` POST /email ```
+
+
+**Request Parameters**
+
+| Parameter     | Required | Data Type | Description           |
+| --------------| -------  | ------- | ------------------------------ |
+| apiKey        |   Yes    | Unique  | Your API Key.  |
+| apiSecret     |   Yes    | Unique  | Your Secret Key |
+| fromEmail     |   Yes    | String  | From email address. This must be whitelisted to your account. |
+| to            |   Yes    | String  | Recipient of the message. Should be a valid email address.
+| subject       |   Yes    | String  | Subject of the message. Up to 255 characters. |
+| html          |   Yes    | Boolean | If set to "1", content will be treated as HTML. If set to "0", content will be treated as plain-text format. |
+| body          |   Yes    |         | Content of the message in HTML of plain-text format. Up to 100,000 characters. Note: inclusion of %Unsubscribe_Link% placeholder is required in HTML transactions. |
+| groupName     |   No     | String  | Client's own reference/grouping to the transaction. Up to 255 characters. |
+| dlrReport     |   No     | Boolean | Must be set to "1" if you want to receive DLR notifications to the indicated dlrCallback. This overrides account settings.  |
+| dlrCallback   |   No     |         | Your own API endpoint where we will be sending DLR notifications. This overrides account settings. |
+
+
+**Limitations**
+
+| Type          | Description           |
+| --------------| ----------------------------------- |
+| Throughput    | The default TPS throughput is 5. You can reach out to Promotexter Support should there be a need to increase allocation.      |
+| Concurrency   | The default TPS throughput is 5. You can reach out to Promotexter Support should there be a need to increase allocation.  |
+
+
+**DLR Notification**
+
+Promotexter can send DLR notifications to your own APIs if you have enabled it on your Account settings or added as a parameter in the SMS request.
+
+Your callback URL must contain the following placeholder values:
+
+| Placeholder | Code | Description                                       |
+| ------------| -----|-------------------------------------------------- |
+| %s | status | DLR Status | Placeholder for DLR status code.            |
+| %i | id | Placeholder for the transaction ID.                          |
+| %d | date | Placeholder for the date the DLR is received (UTC).        |
+| %tr | transactionType | Placeholder for the type of channel to which the transaction is delivered.|
+
+If you have a callbackUrl of: 
+
+`http://example.com?status=%s&id=%i&date=%d&transactionType=%tr` 
+
+the DLR notification would be:
+
+`http://example.com?status=1&id=248bfa2341293ad9sada&date=20180101082355&transactionType=email`
+
+If you have a callbackUrl without the placeholders: 
+
+`http://example.com` 
+
+the DLR notification would be:
+
+`http://example.com?_status=1&_id=248bfa2341293ad9sada&_date=20180101082355`
+
++ Parameters
+    + apiKey (string) - User API key
+    + apiSecret (string) - User secret key
+    + fromEmail (string) - From email address
+    + to (string) - Recipient of the message
+    + subject (string) - The actual text message
+    + html (boolean) - Set to "1" if the content is HTML
+    + body (String) - Content of the message. `%Unsubscribe_Link%` is required if HTML is set to true
+    + groupName (String) - Your own grouping to the transaction
+    + dlrReport (optional, boolean) - Flag to get DLR notification
+    + dlrCallback (optional, url) - API endpoint
+
++ Response 200
+
+    Received on malformed JSON in the request.
+    
+    + Body
+        
+            {
+                "transactionId": "ab123524523cde134342343211342",
+                "transactionCost": 0.50,
+                "fromEmail": "demo@promotexter.com",
+                "to": recipient@promotexter.com,
+                "subject" : "DEMO",
+                "groupName" : "Demo Group Name",
+                "remainingBalance" : 1073.25
+            }
+        
+
++ Response 422 (application/json)
+
+            {
+                "code": "<Error code>"
+                "message": "<Error message>"
+            }
+
+
+# Group Viber Status Codes
+
+This section shows the delivery and event Status codes and description.
+
+**Delivery Status:**
+
+| Code | Description                                                    |
+| ---- | -------------------------------------------------------------- |
+| 0    | Pending. The message is being sent to Viber.                   |
+| 1    | Delivered. The message has been delivered via Viber.           |
+| 2    | Expired or Rejected. The message has been expired or rejected. |
+| 8    | In-transit. The message is being delivered by Viber.           |
+
+**Event Status:**
+
+| Code | Description                                                         |
+| ---- | ------------------------------------------------------------------- |
+| 8000 | Seen. The message has been opened.                   |
+| 8001 | Clicked. The call-to-action button in the message has been clicked. |
+
+
+# Group SMS Status Codes
+
+This section shows the sending and delivery Status codes and description.
+
+**Sending Status:**
+
+| Code | Description                                        |
+| ---- | -------------------------------------------------- |
+| 0    | Queued                                             |
+| 1    | Sent. The message has been accepted by the gateway |
+| 2    | Rejected. Failed to send to the gateway.           |
+| 3    | Error is encountered.                              |
+| 4    | Expired.                                           |
+| 5    | Cancelled.                                         |
+
+
+
+**Delivery Status:**
+
+| Code | Description                                                                         |
+| ---- | -----------------------------------------------------------------------------       |
+| 0    | Pending. The message is being sent to the Carrier.                                                                     |
+| 1    | Delivered. The message has been delivered. <!--(Depends on the route)-->                  |
+| 2    | Bounced. The message has bounced. <!--(Absent subscriber, Invalid MSISDN) -->             |
+| 8    | In-transit. The message is being delivered by the Carrier.                          |
+| 16   | Rejected. The message has been rejected. <!--(Content is blocked, Mobile is blocked)-->    |
+| 32   | Unknown DLR.                                                                        |
+| 64   | Expired.                                                                            |
+
+
+# Group Email Status Codes
+
+This section shows the Send and DLR Status codes and description.
+
+**Sending Status:**
+| Description                                        |
+| -------------------------------------------------- |
+| Queued                                             |
+| Sent. The message has been accepted by the gateway |
+| Rejected. Failed to send to the gateway.           |
+| Error is encountered.                              |
+
+
+**Delivery Status:**
+| Description                                        |
+| -------------------------------------------------- |
+| Pending                                             |
+| Delivered
+| Soft-bounced           |
+| Hard-bounced                              |
+
+
+
+# Group Error Codes
+
+| Code  | Description                                   |
+| ----  | -----------------------------------           |
+| 200100 | Parameters validation error.                             |
+| 200101 | The account has no credit.                               |
+| 200102 | The country setting of the account is incorrect.         |
+| 200201 | The sender name is invalid.                              |
+| 200202 | The recipient is invalid.                                |
+| 200203 | The message body is invalid.                             |
+| 200204 | The callback is invalid.                                 |
+| 200205 | International sending is not allowed.                    |
+| 200206 | Duplicate call is not allowed.                           |
+| 200207 | `subject` is invalid.                                    |
+| 200208 | `html` value is required.                                |
+| 200209 | Email recipient is blacklisted.                          |
+| 200210 | `groupName` is invalid.                                  |
+| 200211 | Email recipient has previously opted-out.                |
+| 200214 | `%Unsubscribe_Link%` placeholder is required.            |
+| 200218 | Code placeholder is required.                            |
+| 200219 | `codelength` value should be at least 3 digits.          |
+| 200220 | `codelength` value should not exceed 20 digits.          |
+| 200221 | `codelength` value should only be numeric.               |
+| 200222 | `codetype` is invalid.                                   |
+| 200223 | `expiration` value shoud be at least 30 seconds.         |
+| 200224 | `expiration` value should be numeric.                    |
+| 200226 | SMS message limit exceeded.                              |
+| 200227 | `id` is required.                                        |
+| 200228 | `id` is invalid.                                         |
+| 200229 | Transaction has expired.                                 |
+| 200230 | `code` is required.                                      |
+| 200231 | `code` is invalid.                                       |
+| 200232 | Caption length exceeded.                                 |
+| 200233 | Invalid content combination.                             |
+| 200234 | Invalid transaction type.                                |
+| 200235 | Invalid TTL value.                                       |
+| 200301 | The message is not routable.                             |
+| 40001 | Unauthorized Access.                                      |
+| 40002 | Too many requests.                                        |
+| 40003 | Parameters validation error.                              |
+| 40004 | Bad request (+Error Description)                          |
+| 40005 | Endpoint doesn't exist.                                   |
+| 40006 | Base Error                                                |
+| 40007 | Unauthorized IP.                                          |
+| 50000 50002 50003 | General Error                                 |
+| 50001 | Bad Request                                               |
+| 500101 | The SMS Service is unavailable.                          |
+
+
+
+*40004 will contain the specific error message detected.*
+
+*Updated as of 11 March 2021. For inquiries, please reach us at support@promotexter.com
