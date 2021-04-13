@@ -232,9 +232,9 @@ This allows you to send SMS to one local or international mobile number per requ
     ```
 
 
-### Send SMS [GET]
+### Send SMS [POST]
 
-``` POST /api/sms/send```
+``` POST /api/sms/send ```
 
 
 **Request Parameters**
@@ -277,9 +277,6 @@ Your callback URL must contain the following placeholder values:
 | %r | referenceId | Placeholder for the reference ID if it has value.   |
 | %d | date | Placeholder for the date the DLR is received (UTC).        |
 | %tr | transactionType | Placeholder for the type of channel to which the transaction is delivered.|
-| %f | from | Placeholder for senderId.        |
-| %t | to | Placeholder for the recipient.        |
-| %c | categoryId | Placeholder for clients additional params for other reference.        |
 
 If you have a callbackUrl of: 
 
@@ -287,7 +284,7 @@ If you have a callbackUrl of:
 
 the DLR notification would be:
 
-`http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&date=20180101082355&transactionType=sms&from=Demo&to=09998998888`
+`http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&date=20180101082355&transactionType=sms`
 
 If you have a callbackUrl without the placeholders: 
 
@@ -295,7 +292,7 @@ If you have a callbackUrl without the placeholders:
 
 the DLR notification would be:
 
-`http://example.com?_status=1&_id=248bfa2341293ad9sada&_date=20180101082355&referenceId=123abc&date=20180101082355&transactionType=sms&from=Demo&to=09998998888`
+`http://example.com?_status=1&_id=248bfa2341293ad9sada&_date=20180101082355`
 
 + Parameters
     + apiKey (string) - User API key
