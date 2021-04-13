@@ -441,7 +441,7 @@ This allows you to retrieve transactions via a single API call.
         }
    
         
-## Batch SMS [/batchsms{?apiKey}{?apiSecret}{?from}{?to}{?text}{?dlrReport}{?dlrCallback}{?referenceId}{?categoryId}{?requestId}{?filter}{?async}{?priority}{?status}{?messages}]
+## Batch SMS [/api/batchsms{?apiKey}{?apiSecret}{?from}{?to}{?text}{?dlrReport}{?dlrCallback}{?referenceId}{?categoryId}{?requestId}{?filter}{?async}{?priority}{?status}{?messages}]
 
 ### Send Batch SMS [POST]
 
@@ -455,19 +455,18 @@ This allows you to send multiple* SMS transactions in a single API request.
 
 **Request Parameters**
 
-| Parameter     | Required           | Description           |  
-| --------------| ------------------ |------------------------------ |
-| apiKey        | Yes                | User API Key  |
-| apiSecret     | Yes                | User secret key |
-| messages      | Yes                | An array of from,to,text values |
-| from          | Yes                | Sender ID. This would appear as the sender of the message. Value must be whitelisted to the account. |
-| to            | Yes                | Recipient of the message. Must be a valid mobile number. |
-| text          | Yes                | Message content. Maximum of 10 parts (1530 standard-GSM or 670 Unicode characters) per transaction.
-| dlrReport     | No                 | Must be set to True if you want to receive Delivery Report to the indicated dlrCallback. This overrides account settings.  |
-| dlrCallback   | No                 | Your own API endpoint where we will be sending the DLR notifications. This overrides account settings. |
-| referenceId   | No                 | Your own reference id to the transaction |
-| categoryId    | No                 | Your own grouping id to the transaction |
-| async         | No                 | If set to True, response will be limited to requestId |
+| Parameter     | Required | Data Type | Description           |
+| --------------| -------  | ------- | ------------------------------ |
+| apiKey        |   Yes    | Unique  | Your API Key.  |
+| apiSecret     |   Yes    | Unique  | Your Secret Key |
+| from          |   Yes    |         | Sender ID. This would appear as the sender of the message. Value must be whitelisted to your account. |
+| to            |   Yes    |         | Recipient of the message. Must be a valid mobile number. |
+| text          |   Yes    |         | Message content. Maximum of 10 parts (1530 standard-GSM or 670 Unicode characters) per transaction.
+| dlrReport     |   No     | Boolean | Must be set to "1" if you want to receive DLR notifications to the indicated `dlrCallback`. This overrides account settings.  |
+| dlrCallback   |   No     |         | Your own API endpoint where we will be sending DLR notifications. This overrides account settings. |
+| referenceId   |   No     |         | Your own reference ID to the transaction. |
+| categoryId    |   No     |         | Your own grouping ID to the transaction.|
+| async         |   No     | Boolean | If set to True, response will be limited to requestId |
 
 **Note:**
 The following could be set as a global field and values shall therefore be applied to all transactions.
