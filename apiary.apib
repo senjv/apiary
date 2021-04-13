@@ -158,9 +158,9 @@ the DLR notification would be:
 
 `http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&date=20180101082355&transactionType=viber`
 
-If you have a callbackUrl without the placeholders: 
+If you have a callbackUrl without the placeholders:
 
-`http://example.com` 
+`http://example.com`
 
 the DLR notification would be:
 
@@ -277,22 +277,24 @@ Your callback URL must contain the following placeholder values:
 | %r | referenceId | Placeholder for the reference ID if it has value.   |
 | %d | date | Placeholder for the date the DLR is received (UTC).        |
 | %tr | transactionType | Placeholder for the type of channel to which the transaction is delivered.|
+| %f | from | Placeholder for the senderId.|
+| %t | transactionType | Placeholder for the recipient.|
 
-If you have a callbackUrl of: 
+If you have a callbackUrl of:
 
-`http://example.com?status=%s&id=%i&referenceId=%r&date=%d&transactionType=%tr` 
+`http://example.com?status=%s&id=%i&referenceId=%r&date=%d&transactionType=%tr`
 
 the DLR notification would be:
 
 `http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&date=20180101082355&transactionType=sms`
 
-If you have a callbackUrl without the placeholders: 
+If you have a callbackUrl without the placeholders:
 
-`http://example.com` 
+`http://example.com`
 
 the DLR notification would be:
 
-`http://example.com?_status=1&_id=248bfa2341293ad9sada&_date=20180101082355`
+`http://example.com?_status=1&_id=248bfa2341293ad9sada&referenceId=123abc&_date=20180101082355&transactionType=sms`
 
 + Parameters
     + apiKey (string) - User API key
@@ -331,6 +333,8 @@ the DLR notification would be:
                 "code": "<Error code>"
                 "message": "<Error message>"
             }
+
+## Retrieve SMS Transaction [/api/sms{?apiKey}{?apiSecret}{?from}{?to}{?text}{?dlrReport}{?dlrCallback}{?pageSize}{?pageNumber}{?sortColumn}{?id}{?referenceId}{?categoryId}{?requestId}{?filter}{?async}{?priority}]
 
 ### Retrieve Transactions [GET]
 
