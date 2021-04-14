@@ -75,7 +75,7 @@ This allows you to inquire your current account balance.
 
 # Group Viber Business Messaging with SMS Fallback
 
-## Single Viber Transaction [/viber/send{?apiKey}{?apiSecret}{?from}{?to}{?text}{?type}{?image}{?caption}{?url}{?ttl}{?dlrCallback}{?referenceId}{?sms_from}{?sms_text}{?filter}]
+## Single Viber Transaction [/viber/send{?apiKey}{?apiSecret}{?from}{?to}{?text}{?type}{?image}{?caption}{?url}{?ttl}{?dlrCallback}{?eventCallback}{?referenceId}{?categoryId}{?sms_from}{?sms_text}{?filter}]
 
 This allows you to send Viber Business Message to one local mobile number per request with an option to send the message as SMS when recipient cannot be reached through Viber after the indicated message lifetime.
 
@@ -107,18 +107,18 @@ This allows you to send Viber Business Message to one local mobile number per re
 | --------------| -------  | ------- | ------------------------------ |
 | apiKey        |   Yes    | Unique  | Your API Key.  |
 | apiSecret     |   Yes    | Unique  | Your Secret Key |
-| from          |   Yes    |         | Your Viber ID. This would appear as the sender of the message. Value must be whitelisted to your account. |
-| to            |   Yes    |         | Recipient of the message. Must be a valid mobile number. |
-| text          |   Yes    | String  | Viber text content. Up to 1000 characters.|
+| from          |   Yes    | String  | Your Viber ID. This would appear as the sender of the message. Value must be whitelisted to your account. |
+| to            |   Yes    | String  | Recipient of the message. Must be a valid mobile number. |
+| text          |          | String  | Viber text content. Up to 1000 characters. <br>  *See allowed content combination below* |
 | type          |   No     | String  | Transaction type. Possible values: `Transactional` or `Promotional`|
-| image         |          | String  | URL of Viber image content.|
-| caption       |          | String  | Call to action button label.|
-| url           |          | String  | Call to action button URL.|
-| ttl           |   No     |         | Message lifetime value in seconds. (Note: TTL less than the minimum allowable value is masked to 30 seconds.)|
-| dlrCallback   |   No     |         | Your own API endpoint where we will be sending DLR notifications. This overrides account settings. |
-| eventCallback |   No     |         | Your own API endpoint where we will be sending event notifications. |
-| referenceId   |   No     |         | Your own reference ID to the transaction. |
-| categoryId    |   No     |         | Your own grouping ID to the transaction. |
+| image         |          | String  | URL of Viber image content. <br> *See allowed content combination below*|
+| caption       |          | String  | Call to action button label. Up to 30 characters. <br> *See allowed content combination below*|
+| url           |          | String  | Call to action button URL. <br> *See allowed content combination below*|
+| ttl           |   No     | Integer | Message lifetime value in seconds. (Note: TTL less than the minimum allowable value is masked to 30 seconds.)|
+| dlrCallback   |   No     | String  | Your own API endpoint where we will be sending DLR notifications. This overrides account settings. |
+| eventCallback |   No     | String  | Your own API endpoint where we will be sending event notifications. |
+| referenceId   |   No     | String  | Your own reference ID to the transaction. Up to 60 characters. |
+| categoryId    |   No     | String  | Your own grouping ID to the transaction. Up to 32 characters. |
 | sms_from      |   No     | String  | SMS Sender Name. This must be whitelisted to your account.|
 | sms_text      |   No     | String  | SMS Fallback message content. Up to 10-message parts (1530 standard-GSM or 670 Unicode characters).|
 <!--| async         |   No     | Boolean | If set to "1", only transactionId will be returned in our response. |-->
@@ -142,21 +142,24 @@ Promotexter can send DLR notifications to your own APIs if you have enabled it o
 
 Your callback URL must contain the following placeholder values:
 
-| Placeholder | Code | Description                                       |
-| ------------| -----|-------------------------------------------------- |
-| %s | status | DLR Status | Placeholder for DLR status code.            |
-| %i | id | Placeholder for the transaction ID.                          |
-| %r | referenceId | Placeholder for the reference ID if it has value.   |
-| %d | date | Placeholder for the date the DLR is received (UTC).        |
-| %tr | transactionType | Placeholder for the type of channel to which the transaction is delivered.|
+| Placeholder | Code            |Optional   | Description                                       |
+| ------------| ------------    |---------  |-------------------------------------------------- |
+| %s          | status          | No        | Placeholder for DLR status code.            |
+| %i          | id              | No        | Placeholder for the transaction ID.                          |
+| %r          | referenceId     | No        | Placeholder for the reference ID if it has value.   |
+| %d          | timestamp       | No        | Placeholder for the date the DLR is received (UTC).        |
+| %f          | from            | No        | Placeholder for the Viber ID |
+| %tr         | transactionType | Yes       | Placeholder for the type of channel to which the transaction is delivered.|
+| %t          | to              | No        | Placeholder for the recipient's mobile number |
+| %c          | categoryId      | Yes       | Placeholder for the category ID |
 
-If you have a callbackUrl of: 
+If you have a callbackUrl of:
 
-`http://example.com?status=%s&id=%i&referenceId=%r&date=%d&transactionType=%tr` 
+`http://example.com?status=%s&id=%i&referenceId=%r&date=%d&from=%f&transactionType=%tr&to=%t&categoryId=%c`
 
 the DLR notification would be:
 
-`http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&date=20180101082355&transactionType=viber`
+`http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&date=20180101082355&from=54321&transactionType=viber&to=639995671234&categoryId=99`
 
 If you have a callbackUrl without the placeholders:
 
@@ -164,7 +167,7 @@ If you have a callbackUrl without the placeholders:
 
 the DLR notification would be:
 
-`http://example.com?_status=1&_id=248bfa2341293ad9sada&_date=20180101082355`
+`http://example.com?_status=1&_id=248bfa2341293ad9sada&referenceId=123abc&_timestamp=20180101082355&from=54321&to=639995671234`
 
 
 
@@ -172,27 +175,46 @@ the DLR notification would be:
 
 Promotexter can send event notifications to your own APIs if you have added it as a parameter in the request.
 
-If you have a callbackUrl of: 
+Your event callback URL must contain the following placeholder values:
 
-`http://example.com` 
+| Placeholder | Code            | Description                                       |
+| ------------| ------------    |-------------------------------------------------- |
+| %s          | status          | Placeholder for event status code.            |
+| %i          | id              | Placeholder for the transaction ID.                          |
+| %d          | timestamp       | Placeholder for the date the event is received (UTC).        |
+| %t          | mobileNumber    | Placeholder for the recepient's mobile number|
+
+If you have a event callbackUrl of:
+
+`http://example.com?status=%s&id=%i&date=%d&to=%t`
 
 the event notification would be:
 
-`http://example.com?_status=8000&_id=248bfa2341293ad9sada&_date=20180101082355`
+`http://example.com?status=8000&id=248bfa2341293ad9sada&date=20180101082355&to=639995671234`
+
+If you have a event callbackUrl of:
+
+`http://example.com`
+
+the event notification would be:
+
+`http://example.com?_status=8000&_id=248bfa2341293ad9sada&_timestamp=20180101082355&mobileNumber=639995671234`
 
 + Parameters
     + apiKey (string) - User API key
     + apiSecret (string) - User secret key
     + from (string) - Sender ID
     + to (string) - Recipient 
-    + text (string) - The actual text message
-    + type (string) - Transactional or Promotional
-    + image (string) - URL of the image
-    + caption (string) - Label for the CTA button
-    + url (string) - URL of the CTA button
-    + ttl (integer) - Message lifetime in seconds
+    + text (optional, string) - The actual text message
+    + type (optional, string) - Transactional or Promotional
+    + image (optional, url) - URL of the image
+    + caption (optional, string) - Label for the CTA button
+    + url (optional, url) - URL of the CTA button
+    + ttl (optional, integer) - Message lifetime in seconds
     + dlrCallback (optional, url) - API endpoint
+    + eventCallback (optional, url) - Event API endpoint
     + referenceId (optional, string) - Reference ID for the transaction.
+    + categoryId (optional, string) - Grouping ID for the transaction.
     + sms_from (optional, string) - SMS Sender Name.
     + sms_text (optional, string) - SMS Fallback message content.
     <!--+ async (optional, boolean) - Asynchronuos mode-->
