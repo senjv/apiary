@@ -75,7 +75,7 @@ This allows you to inquire your current account balance.
 
 # Group Viber Business Messaging with SMS Fallback
 
-## Single Viber Transaction [/viber/send{?apiKey}{?apiSecret}{?from}{?to}{?text}{?type}{?image}{?caption}{?url}{?ttl}{?dlrCallback}{?eventCallback}{?referenceId}{?categoryId}{?sms_from}{?sms_text}{?filter}]
+## Single Viber Transaction [/viber/send{?apiKey}{?apiSecret}{?from}{?to}{?text}{?type}{?image}{?caption}{?url}{?ttl}{?dlrCallback}{?eventCallback}{?referenceId}{?sms_from}{?sms_text}{?filter}]
 
 This allows you to send Viber Business Message to one local mobile number per request with an option to send the message as SMS when recipient cannot be reached through Viber after the indicated message lifetime.
 
@@ -118,7 +118,7 @@ This allows you to send Viber Business Message to one local mobile number per re
 | dlrCallback   |   No     | String  | Your own API endpoint where we will be sending DLR notifications. This overrides account settings. |
 | eventCallback |   No     | String  | Your own API endpoint where we will be sending event notifications. |
 | referenceId   |   No     | String  | Your own reference ID to the transaction. Up to 60 characters. |
-| categoryId    |   No     | String  | Your own grouping ID to the transaction. Up to 32 characters. |
+<!--| categoryId    |   No     | String  | Your own grouping ID to the transaction. Up to 32 characters. |-->
 | sms_from      |   No     | String  | SMS Sender Name. This must be whitelisted to your account.|
 | sms_text      |   No     | String  | SMS Fallback message content. Up to 10-message parts (1530 standard-GSM or 670 Unicode characters).|
 <!--| async         |   No     | Boolean | If set to "1", only transactionId will be returned in our response. |-->
@@ -153,7 +153,7 @@ Your callback URL must contain the following placeholder values:
 | %f          | from            | No        | Placeholder for the Viber ID |
 | %tr         | transactionType | Yes       | Placeholder for the type of channel to which the transaction is delivered.|
 | %t          | to              | No        | Placeholder for the recipient's mobile number |
-| %c          | categoryId      | Yes       | Placeholder for the category ID |
+<!--| %c          | categoryId      | Yes       | Placeholder for the category ID |-->
 
 If you have a callbackUrl of:
 
@@ -216,7 +216,7 @@ the event notification would be:
     + dlrCallback (optional, url) - API endpoint
     + eventCallback (optional, url) - Event API endpoint
     + referenceId (optional, string) - Reference ID for the transaction.
-    + categoryId (optional, string) - Grouping ID for the transaction.
+    <!--+ categoryId (optional, string) - Grouping ID for the transaction.-->
     + sms_from (optional, string) - SMS Sender Name.
     + sms_text (optional, string) - SMS Fallback message content.
     <!--+ async (optional, boolean) - Asynchronuos mode-->
