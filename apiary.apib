@@ -140,14 +140,16 @@ This allows you to send Viber Business Message to one local mobile number per re
 
 Promotexter can send DLR notifications to your own APIs if you have enabled it on your Account settings or added as a parameter in the request.
 
+Only one DLR notification will be sent per request regardless if the transaction was fallback to SMS.
+
 Your callback URL must contain the following placeholder values:
 
-| Placeholder | Code            |Optional   | Description                                       |
+| Placeholder | Code            |Required   | Description                                       |
 | ------------| ------------    |---------  |-------------------------------------------------- |
 | %s          | status          | No        | Placeholder for DLR status code.            |
 | %i          | id              | No        | Placeholder for the transaction ID.                          |
 | %r          | referenceId     | No        | Placeholder for the reference ID if it has value.   |
-| %d          | timestamp       | No        | Placeholder for the date the DLR is received (UTC).        |
+| %d          | timestamp       | No        | Placeholder for the date and time the DLR is received (UTC).        |
 | %f          | from            | No        | Placeholder for the Viber ID |
 | %tr         | transactionType | Yes       | Placeholder for the type of channel to which the transaction is delivered.|
 | %t          | to              | No        | Placeholder for the recipient's mobile number |
@@ -155,11 +157,11 @@ Your callback URL must contain the following placeholder values:
 
 If you have a callbackUrl of:
 
-`http://example.com?status=%s&id=%i&referenceId=%r&date=%d&from=%f&transactionType=%tr&to=%t&categoryId=%c`
+`http://example.com?status=%s&id=%i&referenceId=%r&timestamp=%d&from=%f&transactionType=%tr&to=%t&categoryId=%c`
 
 the DLR notification would be:
 
-`http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&date=20180101082355&from=54321&transactionType=viber&to=639995671234&categoryId=99`
+`http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&timestamp=20180101082355&from=54321&transactionType=viber&to=639995671234&categoryId=99`
 
 If you have a callbackUrl without the placeholders:
 
@@ -177,20 +179,20 @@ Promotexter can send event notifications to your own APIs if you have added it a
 
 Your event callback URL must contain the following placeholder values:
 
-| Placeholder | Code            | Description                                       |
-| ------------| ------------    |-------------------------------------------------- |
-| %s          | status          | Placeholder for event status code.            |
-| %i          | id              | Placeholder for the transaction ID.                          |
-| %d          | timestamp       | Placeholder for the date the event is received (UTC).        |
-| %t          | mobileNumber    | Placeholder for the recepient's mobile number|
+| Placeholder | Code            | Required  | Description                               |
+| ------------| ------------    |-----------| ----------------------------------------- |
+| %s          | status          | No        | Placeholder for event status code.    |
+| %i          | id              | No        | Placeholder for the transaction ID.   |
+| %d          | timestamp       | No        | Placeholder for the date and time the event is received (UTC). |
+| %t          | mobileNumber    | No        | Placeholder for the recepient's mobile number.   |
 
 If you have a event callbackUrl of:
 
-`http://example.com?status=%s&id=%i&date=%d&to=%t`
+`http://example.com?status=%s&id=%i&timestamp=%d&to=%t`
 
 the event notification would be:
 
-`http://example.com?status=8000&id=248bfa2341293ad9sada&date=20180101082355&to=639995671234`
+`http://example.com?status=8000&id=248bfa2341293ad9sada&timestamp=20180101082355&to=639995671234`
 
 If you have a event callbackUrl of:
 
