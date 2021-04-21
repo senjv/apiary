@@ -186,7 +186,7 @@ Your event callback URL must contain the following placeholder values:
 | %d          | timestamp       | Placeholder for the date and time the event is received (UTC). |
 | %t          | mobileNumber    | Placeholder for the recepient's mobile number.   |
 
-If you have a event callbackUrl of:
+If you have an event callbackUrl of:
 
 `http://example.com?status=%s&id=%i&timestamp=%d&to=%t`
 
@@ -194,7 +194,7 @@ the event notification would be:
 
 `http://example.com?status=8000&id=248bfa2341293ad9sada&timestamp=20180101082355&to=639995671234`
 
-If you have a event callbackUrl of:
+If you have an event callbackUrl without the placeholders:
 
 `http://example.com`
 
