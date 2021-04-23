@@ -595,12 +595,12 @@ This allows you to cancel queued batch SMS transactions.
 
 **Request Parameters**
 
-| Parameter     | Description                    |
-| --------------| ------------------------------    |
-| apiKey        | User API Key                      |
-| apiSecret     | User secret key                   |
-| status        | Value must be set to `cancelled`  |
-| requestId     | requestId to be cancelled         |
+| Parameter     | Required           | Description                       |
+| --------------| ------------------ | ------------------------------    |
+| apiKey        | Yes                | User API Key                      |
+| apiSecret     | Yes                | User secret key                   |
+| status        | Yes                | Value must be set to `cancelled`  |
+| requestId     | Yes                | requestId to be cancelled         |
 
 + Response 200 (application/json)
 
