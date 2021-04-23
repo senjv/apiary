@@ -118,15 +118,15 @@ This allows you to send Viber Business Message to one local mobile number per re
 | dlrCallback   |   No     | String  | Your own API endpoint where we will be sending DLR notifications. This overrides account settings. |
 | eventCallback |   No     | String  | Your own API endpoint where we will be sending event notifications. |
 | referenceId   |   No     | String  | Your own reference ID to the transaction. Up to 60 characters. |
-<!--| categoryId    |   No     | String  | Your own grouping ID to the transaction. Up to 32 characters. |-->
 | sms_from      |   No     | String  | SMS Sender Name. This must be whitelisted to your account.|
 | sms_text      |   No     | String  | SMS Fallback message content. Up to 10-message parts (1530 standard-GSM or 670 Unicode characters).|
 <!--| async         |   No     | Boolean | If set to "1", only transactionId will be returned in our response. |-->
+<!--| categoryId    |   No     | String  | Your own grouping ID to the transaction. Up to 32 characters. |-->
 
 **Allowed Content Combinations**
 
 | Content      |
-| -------------| 
+| -------------|
 | Text only    |
 | Image only   |
 | Button only  |
@@ -144,24 +144,24 @@ Only one DLR notification will be sent per request regardless if the transaction
 
 Your callback URL must contain the following placeholder values:
 
-| Placeholder | Code            |Required   | Description                                       |
-| ------------| ------------    |---------  |-------------------------------------------------- |
-| %s          | status          | No        | Placeholder for DLR status code.            |
-| %i          | id              | No        | Placeholder for the transaction ID.                          |
-| %r          | referenceId     | No        | Placeholder for the reference ID if it has value.   |
-| %d          | timestamp       | No        | Placeholder for the date and time the DLR is received (UTC).        |
-| %f          | from            | No        | Placeholder for the Viber ID |
-| %tr         | transactionType | Yes       | Placeholder for the type of channel to which the transaction is delivered.|
-| %t          | to              | No        | Placeholder for the recipient's mobile number |
+| Placeholder | Code            | Description                                       |
+| ------------| ------------    | --------------------------------------------------|
+| %s          | status          | Placeholder for DLR status code.            |
+| %i          | id              | Placeholder for the transaction ID.                          |
+| %r          | referenceId     | Placeholder for the reference ID if it has value.   |
+| %d          | timestamp       | Placeholder for the date and time the DLR is received (UTC).        |
+| %f          | from            | Placeholder for the Viber ID |
+| %tr         | transactionType | Placeholder for the type of channel to which the transaction is delivered.|
+| %t          | to              | Placeholder for the recipient's mobile number |
 <!--| %c          | categoryId      | Yes       | Placeholder for the category ID |-->
 
 If you have a callbackUrl of:
 
-`http://example.com?status=%s&id=%i&referenceId=%r&timestamp=%d&from=%f&transactionType=%tr&to=%t&categoryId=%c`
+`http://example.com?status=%s&id=%i&referenceId=%r&timestamp=%d&from=%f&transactionType=%tr&to=%t`
 
 the DLR notification would be:
 
-`http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&timestamp=20180101082355&from=54321&transactionType=viber&to=639995671234&categoryId=99`
+`http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&timestamp=20180101082355&from=54321&transactionType=viber&to=639995671234`
 
 If you have a callbackUrl without the placeholders:
 
@@ -179,14 +179,14 @@ Promotexter can send event notifications to your own APIs if you have added it a
 
 Your event callback URL must contain the following placeholder values:
 
-| Placeholder | Code            | Required  | Description                               |
-| ------------| ------------    |-----------| ----------------------------------------- |
-| %s          | status          | No        | Placeholder for event status code.    |
-| %i          | id              | No        | Placeholder for the transaction ID.   |
-| %d          | timestamp       | No        | Placeholder for the date and time the event is received (UTC). |
-| %t          | mobileNumber    | No        | Placeholder for the recepient's mobile number.   |
+| Placeholder | Code            | Description                               |
+| ------------| ------------    | ----------------------------------------- |
+| %s          | status          | Placeholder for event status code.    |
+| %i          | id              | Placeholder for the transaction ID.   |
+| %d          | timestamp       | Placeholder for the date and time the event is received (UTC). |
+| %t          | mobileNumber    | Placeholder for the recepient's mobile number.   |
 
-If you have a event callbackUrl of:
+If you have an event callbackUrl of:
 
 `http://example.com?status=%s&id=%i&timestamp=%d&to=%t`
 
@@ -194,7 +194,7 @@ the event notification would be:
 
 `http://example.com?status=8000&id=248bfa2341293ad9sada&timestamp=20180101082355&to=639995671234`
 
-If you have a event callbackUrl of:
+If you have an event callbackUrl without the placeholders:
 
 `http://example.com`
 
