@@ -306,11 +306,11 @@ Your callback URL must contain the following placeholder values:
 
 If you have a callbackUrl of:
 
-`http://example.com?status=%s&id=%i&referenceId=%r&date=%d&transactionType=%tr`
+`http://example.com?status=%s&id=%i&referenceId=%r&timestamp=%d&transactionType=%tr&from=%f&to=%t`
 
 the DLR notification would be:
 
-`http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&date=20180101082355&transactionType=sms`
+`http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&timestamp=20180101082355&transactionType=sms&from=PTXTrial&to=639995671234`
 
 If you have a callbackUrl without the placeholders:
 
@@ -318,7 +318,7 @@ If you have a callbackUrl without the placeholders:
 
 the DLR notification would be:
 
-`http://example.com?_status=1&_id=248bfa2341293ad9sada&referenceId=123abc&_date=20180101082355&transactionType=sms`
+`http://example.com?_status=1&_id=248bfa2341293ad9sada&referenceId=123abc&_timestamp=20180101082355&transactionType=sms`
 
 + Parameters
     + apiKey (string) - User API key
