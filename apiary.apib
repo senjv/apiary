@@ -635,7 +635,7 @@ Set up your account webhook with the following placeholders:
 
 # Group Two-Factor Authentication Service
 
-## Generate Code [/twofa/generate{?apiKey}{?apiSecret}{?from}{?to}{?text}{?codelength}{?codetype}{?expiration}{?dlrReport}{?dlrCallback}{?pageSize}{?pageNumber}{?sortColumn}{?id}{?referenceId}{?categoryId}{?requestId}{?filter}{?async}{?priority}]
+## Generate Code [/twofa/generate{?apiKey}{?apiSecret}{?from}{?to}{?message}{?codelength}{?codetype}{?expiration}{?dlrReport}{?dlrCallback}{?pageSize}{?pageNumber}{?sortColumn}{?id}{?referenceId}{?categoryId}{?requestId}{?filter}{?async}{?priority}]
 
 This allows you to generate code and send SMS to one local or international mobile number per transaction.
 
@@ -651,7 +651,7 @@ This allows you to generate code and send SMS to one local or international mobi
 | apiSecret     |   Yes    | Unique  | Your Secret Key. |
 | from          |   Yes    |         | Sender ID. This would appear as the sender of the message. This must be whitelisted to your account. |
 | to            |   Yes    |         | Recipient of the message. Must be a valid mobile number. |
-| text          |   Yes    |         | Message content. Must include the placeholder for code `%code%`. Should be limited to 140 GSM characters per transaction.|
+| message       |   Yes    |         | Message content. Must include the placeholder for code `%code%`. Should be limited to 140 GSM characters per transaction.|
 | codelength    |   No     | Integer | Length of the code to be generated. Default value: 4. Min: 3, Max: 20. |
 | codetype      |   No     | String  | Type of code to be generated. Default value: numeric. Possible values: numeric, alphanumeric, alpha. |
 | expiration    |   No     | Integer | Expiration of the transaction. Default value of 300 seconds. Min: 30, Max: 86400. |
