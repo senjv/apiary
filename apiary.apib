@@ -235,7 +235,7 @@ the event notification would be:
 
 # Group SMS Messaging
 
-## Single SMS Transaction [/sms/send{?apiKey}{?apiSecret}{?from}{?to}{?text}{?dlrReport}{?dlrCallback}{?pageSize}{?pageNumber}{?sortColumn}{?id}{?referenceId}{?categoryId}{?requestId}{?filter}{?async}{?priority}]
+## Single SMS Transaction [/sms/send{?apiKey}{?apiSecret}{?from}{?to}{?text}{?dlrReport}{?dlrCallback}{?pageSize}{?pageNumber}{?sortColumn}{?id}{?referenceId}{?requestId}{?filter}{?async}{?priority}]
 
 This allows you to send SMS to one local or international mobile number per request.
 
@@ -273,7 +273,7 @@ This allows you to send SMS to one local or international mobile number per requ
 | dlrReport     |   No     | Boolean | Must be set to "1" if you want to receive DLR notifications to the indicated `dlrCallback`. This overrides account settings.  |
 | dlrCallback   |   No     |         | Your own API endpoint where we will be sending DLR notifications. This overrides account settings. |
 | referenceId   |   No     |         | Your own reference ID to the transaction. |
-| categoryId    |   No     |         | Your own grouping ID to the transaction.|
+<!--| | categoryId    |   No     |         | Your own grouping ID to the transaction.| -->
 <!--| async         |   No     | Boolean | If set to "1", only transactionId will be returned in our response. |-->
 
 **Limitations**
@@ -329,7 +329,7 @@ the DLR notification would be:
     + dlrReport (optional, boolean) - Flag to get DLR notification
     + dlrCallback (optional, url) - API endpoint
     + referenceId (optional, string) - Reference ID for the transaction.
-    + categoryId (optional, string) - Category ID for the transaction
+    <!-- + categoryId (optional, string) - Category ID for the transaction -->
     <!--+ async (optional, boolean) - Asynchronuos mode-->
     
 + Response 200
@@ -385,7 +385,7 @@ This allows you to retrieve transactions via a single API call.
 | filter[dateCreatedLt] | No                        | Filter transactions with creation date lesser than this value.  |
 | filter[transactionId] | No                        | Specific transactionId lookup  |
 | filter[referenceId]   | No                        | Specific referenceId lookup  |
-| filter[categoryId]    | No                        | Specific categoryId lookup  |
+<!-- | filter[categoryId]    | No                        | Specific categoryId lookup  | -->
 | filter[requestId]     | No                        | Specific requestId lookup  |
 | filter[from]          | No                        | Filter by "from" parameter |
 | filter[to]            | No                        | Filter by "to" parameter  |
@@ -426,7 +426,7 @@ This allows you to retrieve transactions via a single API call.
             {
               "id": "20180307090240SENDERTEST6391731710538",
               "requestId": "9c0dec49-3b6c-45d4-a008-26823aaea1c1",
-              "categoryId": "X",
+             <!-- "categoryId": "X", -->
               "from": "TESTSMS",
               "to": "6391731710538",
               "text": "a",
@@ -440,7 +440,7 @@ This allows you to retrieve transactions via a single API call.
             {
               "id": "20180307090240SENDERTEST6391731710538",
               "requestId": "9c0dec49-3b6c-45d4-a008-26823aaea1c1",
-              "categoryId": "X",
+             <!-- "categoryId": "X", -->
               "from": "TESTSMS",
               "to": "6391731710538",
               "text": "a",
@@ -454,7 +454,7 @@ This allows you to retrieve transactions via a single API call.
             {
               "id": "20180307090240SENDERTEST6391731710538",
               "requestId": "9c0dec49-3b6c-45d4-a008-26823aaea1c1",
-              "categoryId": "X",
+             <!-- "categoryId": "X", -->
               "from": "TESTSMS",
               "to": "6391731710538",
               "text": "a",
@@ -469,7 +469,7 @@ This allows you to retrieve transactions via a single API call.
         }
    
         
-## Batch SMS [/api/batchsms{?apiKey}{?apiSecret}{?from}{?to}{?text}{?dlrReport}{?dlrCallback}{?referenceId}{?categoryId}{?requestId}{?filter}{?async}{?priority}{?status}{?messages}]
+## Batch SMS [/api/batchsms{?apiKey}{?apiSecret}{?from}{?to}{?text}{?dlrReport}{?dlrCallback}{?referenceId}{?requestId}{?filter}{?async}{?priority}{?status}{?messages}]
 
 ### Send Batch SMS [POST]
 
@@ -493,7 +493,7 @@ This allows you to send multiple* SMS transactions in a single API request.
 | dlrReport     |   No     | Boolean | Must be set to "1" if you want to receive DLR notifications to the indicated `dlrCallback`. This overrides account settings.  |
 | dlrCallback   |   No     |         | Your own API endpoint where we will be sending DLR notifications. This overrides account settings. |
 | referenceId   |   No     |         | Your own reference ID to the transaction. |
-| categoryId    |   No     |         | Your own grouping ID to the transaction.|
+<!-- | categoryId    |   No     |         | Your own grouping ID to the transaction.| -->
 | async         |   No     | Boolean | If set to True, response will be limited to requestId |
 
 **Note:**
@@ -518,7 +518,7 @@ The following could be set as a global field and values shall therefore be appli
     + dlrReport (optional, boolean) - Flag to get DLR notification
     + dlrCallback (optional, url) - API endpoint
     + referenceId (optional, string) - Reference ID for the transaction
-    + categoryId (optional, string) - Category ID for the transaction
+   <!-- + categoryId (optional, string) - Category ID for the transaction -->
     + async (optional, boolean) - Asynchronuos mode
     
 + Request (application/json)
@@ -635,7 +635,7 @@ Set up your account webhook with the following placeholders:
 
 # Group Two-Factor Authentication Service
 
-## Generate Code [/twofa/generate{?apiKey}{?apiSecret}{?from}{?to}{?message}{?codelength}{?codetype}{?expiration}{?dlrReport}{?dlrCallback}{?pageSize}{?pageNumber}{?sortColumn}{?id}{?referenceId}{?categoryId}{?requestId}{?filter}{?async}{?priority}]
+## Generate Code [/twofa/generate{?apiKey}{?apiSecret}{?from}{?to}{?message}{?codelength}{?codetype}{?expiration}{?dlrReport}{?dlrCallback}{?pageSize}{?pageNumber}{?sortColumn}{?id}{?referenceId}{?requestId}{?filter}{?async}{?priority}]
 
 This allows you to generate code and send SMS to one local or international mobile number per transaction.
 
@@ -775,7 +775,7 @@ This allows you to verify a generated code.
 
 # Group Email Messaging
 
-## Single Email Transaction [/email{?apiKey}{?apiSecret}{?fromEmail}{?to}{?subject}{?html}{?body}{?groupName}{?dlrReport}{?dlrCallback}{?pageSize}{?pageNumber}{?sortColumn}{?id}{?referenceId}{?categoryId}{?requestId}{?filter}{?async}{?priority}]
+## Single Email Transaction [/email{?apiKey}{?apiSecret}{?fromEmail}{?to}{?subject}{?html}{?body}{?groupName}{?dlrReport}{?dlrCallback}{?pageSize}{?pageNumber}{?sortColumn}{?id}{?referenceId}{?requestId}{?filter}{?async}{?priority}]
 
 You can use the API to send email to one recipient per transaction.
 
@@ -977,7 +977,7 @@ This section shows the Send and DLR Status codes and description.
 | 200205 | International sending is not allowed.                    |
 | 200206 | Duplicate call is not allowed.                           |
 | 200207 | `subject` is invalid.                                    |
-| 200208 | `html` value is required.                                |
+| 200208 | `html` is invalid.                                       |
 | 200209 | Email recipient is blacklisted.                          |
 | 200210 | `groupName` is invalid.                                  |
 | 200211 | Email recipient has previously opted-out.                |
