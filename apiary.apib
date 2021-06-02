@@ -299,7 +299,7 @@ Your callback URL must contain the following placeholder values:
 | %s | status | DLR Status | Placeholder for DLR status code.            |
 | %i | id | Placeholder for the transaction ID.                          |
 | %r | referenceId | Placeholder for the reference ID if it has value.   |
-| %d | timestamp | Placeholder for the timestamp the DLR is received (UTC).        |
+| %d | timestamp | Placeholder for the date and time the DLR is received (UTC).        |
 | %tr | transactionType | Placeholder for the type of channel to which the transaction is delivered.|
 | %f | from | Placeholder for the senderId.|
 | %t | to | Placeholder for the recipient's mobile number.|
@@ -318,26 +318,26 @@ If you have a callbackUrl without the placeholders:
 
 the DLR notification would be:
 
-`http://example.com?_status=1&_id=248bfa2341293ad9sada&referenceId=123abc&_timestamp=20180101082355&transactionType=sms&from=PTXTrial&to=639995671234`
+`http://example.com?_status=1&_id=248bfa2341293ad9sada&referenceId=123abc&_timestamp=20180101082355&from=PTXTrial&to=639995671234`
 
 + Parameters
     + apiKey (string) - User API key
     + apiSecret (string) - User secret key
     + from (string) - Sender ID
-    + to (string) - Recipient 
+    + to (string) - Recipient
     + text (string) - The actual text message
     + dlrReport (optional, boolean) - Flag to get DLR notification
     + dlrCallback (optional, url) - API endpoint
     + referenceId (optional, string) - Reference ID for the transaction.
     <!-- + categoryId (optional, string) - Category ID for the transaction -->
     <!--+ async (optional, boolean) - Asynchronuos mode-->
-    
+
 + Response 200
 
     Received on malformed JSON in the request.
-    
+
     + Body
-        
+
             {
                 "transactionId": "ab123524523cde134342343211342",
                 "remainingBalance": 100.00,
@@ -349,7 +349,7 @@ the DLR notification would be:
                 "from" : "DEMO",
                 "to" : "639170000001"
             }
-        
+
 
 + Response 422 (application/json)
 
@@ -401,8 +401,8 @@ This allows you to retrieve transactions via a single API call.
     + sortColumn (optional, number) - Specify the sort column.
         + Default: `dateCreated`
     + filter (optional, array) - Filter array, a combination of filters
-    
-    
+
+
 
 + Response 200 (application/json)
 
@@ -467,8 +467,8 @@ This allows you to retrieve transactions via a single API call.
             }
           ]
         }
-   
-        
+
+
 ## Batch SMS [/api/batchsms{?apiKey}{?apiSecret}{?from}{?to}{?text}{?dlrReport}{?dlrCallback}{?referenceId}{?requestId}{?filter}{?async}{?priority}{?status}{?messages}]
 
 ### Send Batch SMS [POST]
@@ -501,10 +501,10 @@ The following could be set as a global field and values shall therefore be appli
 
 | Parameter     | Required |
 | --------------| ------------------ |
-| from          | Yes                | 
+| from          | Yes                |
 | to            | Yes                |
 | text          | Yes                |
-| dlrCallback   | No                 | 
+| dlrCallback   | No                 |
 
 
 
@@ -513,14 +513,14 @@ The following could be set as a global field and values shall therefore be appli
     + apiSecret (string) - User secret key
     + messages (array) - Array of values
     + from (string) - Sender ID
-    + to (string) - Recipient 
+    + to (string) - Recipient
     + text (string) - Message content
     + dlrReport (optional, boolean) - Flag to get DLR notification
     + dlrCallback (optional, url) - API endpoint
     + referenceId (optional, string) - Reference ID for the transaction
    <!-- + categoryId (optional, string) - Category ID for the transaction -->
     + async (optional, boolean) - Asynchronuos mode
-    
+
 + Request (application/json)
      ```js
     {
@@ -539,10 +539,10 @@ The following could be set as a global field and values shall therefore be appli
                     ]
     }
     ```
-    
+
 + Response 200 (application/json)
 
-    ```js 
+    ```js
    {
     "requestId": "44d6cb22-d259-4140-8fdf-b0c7cad17bcf",
     "remainingBalance": 49952.34999999994,
@@ -608,15 +608,15 @@ This allows you to cancel queued batch SMS transactions.
             status: "cancelled",
             requestId: "9c0dec49-3b6c-45d4-a008-26823aaea1c1"
         };
-    
+
 
 + Parameters
     + apiKey (string) - User API key
     + apiSecret (string) - User secret key
-    + status (string) - cancelled 
+    + status (string) - cancelled
     + requestId (string) - Generated requestId
-    
-# Group 2-way SMS 
+
+# Group 2-way SMS
 
 ##Receive messages via a dedicated Virtual Reply Number
 *VRNs may be requested through your Account Manager (sales@promotexter.com)
@@ -624,7 +624,7 @@ This allows you to cancel queued batch SMS transactions.
 ##Forward incoming messages to your webhook in real-time
 Set up your account webhook with the following placeholders:
 
-`https://example.com/yourapi?message=%message%&to=%to%&from=%from%`
+`https://example.com?message=%message%&to=%to%&from=%from%`
 
 | Placeholder | Code | Description                                       |
 | ------------| -----|-------------------------------------------------- |
@@ -637,7 +637,7 @@ Set up your account webhook with the following placeholders:
 
 ## Generate Code [/twofa/generate{?apiKey}{?apiSecret}{?from}{?to}{?message}{?codelength}{?codetype}{?expiration}{?dlrReport}{?dlrCallback}{?pageSize}{?pageNumber}{?sortColumn}{?id}{?referenceId}{?requestId}{?filter}{?async}{?priority}]
 
-This allows you to generate code and send SMS to one local or international mobile number per transaction. <a href="https://promotexter.com/2fa-verify/" style="color:blue !important">Learn more</a>
+This allows you to generate code and send SMS to one local or international mobile number per transaction. <a href="https://promotexter.com/2fa-verify/"><u>Learn more.</u></a>
 
 ### Generate API [POST]
 
@@ -675,7 +675,7 @@ Your callback URL must contain the following placeholder values:
 | %f | from | Placeholder for the senderId.|
 | %t | to | Placeholder for the recipient's mobile number.|
 
-If you have a callbackUrl of: 
+If you have a callbackUrl of:
 
 `http://example.com?status=%s&id=%i&referenceId=%r&date=%d`
 
@@ -683,9 +683,9 @@ the DLR notification would be:
 
 `http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&date=20180101082355&from=testsms&to=639151234567`
 
-If you have a callbackUrl without the placeholders: 
+If you have a callbackUrl without the placeholders:
 
-`http://example.com` 
+`http://example.com`
 
 the DLR notification would be:
 
@@ -695,7 +695,7 @@ the DLR notification would be:
     + apiKey (string) - User API key
     + apiSecret (string) - User secret key
     + from (string) - Sender ID
-    + to (string) - Recipient 
+    + to (string) - Recipient
     + message (string) - The actual text message. `%code%` placeholder is required.
     + codelength (optional, integer) - Length of the code to be generated
     + codetype (optional, string) - Possible values: numeric, alpha, or alphanumeric
@@ -703,13 +703,13 @@ the DLR notification would be:
     + dlrReport (optional, boolean) - Flag to get DLR notification
     + dlrCallback (optional, url) - DLR API endpoint
     + referenceId (optional, string) - Reference ID for the transaction.
-    
+
 + Response 200
 
     Received on malformed JSON in the request.
-    
+
     + Body
-        
+
             {
              "id": "550c83c2-10b2-43b9-9813-dc035f0fbcab",
              "unitCost": 1,
@@ -721,7 +721,7 @@ the DLR notification would be:
              "remaining": 16532.997999095325,
              "expiration": "30"
             }
-        
+
 
 + Response 422 (application/json)
 
@@ -752,19 +752,19 @@ This allows you to verify a generated code.
     + apiKey (string) - User API key
     + apiSecret (string) - User secret key
     + id (string) - Transaction ID
-    + code (string) - Code to be validated 
-  
-    
+    + code (string) - Code to be validated
+
+
 + Response 200
 
     Received on malformed JSON in the request.
-    
+
     + Body
-        
+
             {
                 "message": "valid"
             }
-        
+
 
 + Response 422 (application/json)
 
@@ -838,17 +838,17 @@ Your callback URL must contain the following placeholder values:
 | %d | date | Placeholder for the date the DLR is received (UTC).        |
 | %tr | transactionType | Placeholder for the type of channel to which the transaction is delivered.|
 
-If you have a callbackUrl of: 
+If you have a callbackUrl of:
 
-`http://example.com?status=%s&id=%i&date=%d&transactionType=%tr` 
+`http://example.com?status=%s&id=%i&date=%d&transactionType=%tr`
 
 the DLR notification would be:
 
 `http://example.com?status=1&id=248bfa2341293ad9sada&date=20180101082355&transactionType=email`
 
-If you have a callbackUrl without the placeholders: 
+If you have a callbackUrl without the placeholders:
 
-`http://example.com` 
+`http://example.com`
 
 the DLR notification would be:
 
@@ -869,9 +869,9 @@ the DLR notification would be:
 + Response 200
 
     Received on malformed JSON in the request.
-    
+
     + Body
-        
+
             {
                 "transactionId": "ab123524523cde134342343211342",
                 "transactionCost": 0.50,
@@ -881,7 +881,7 @@ the DLR notification would be:
                 "groupName" : "Demo Group Name",
                 "remainingBalance" : 1073.25
             }
-        
+
 
 + Response 422 (application/json)
 
@@ -1017,4 +1017,4 @@ This section shows the Send and DLR Status codes and description.
 
 *40004 will contain the specific error message detected.*
 
-*Updated as of 11 March 2021. For inquiries, please reach us at support@promotexter.com
+*Updated as of 09 May 2021. For inquiries, please reach us at support@promotexter.com
