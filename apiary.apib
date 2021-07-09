@@ -202,25 +202,19 @@ the event notification would be:
 
 `http://example.com?_status=8000&_id=248bfa2341293ad9sada&_timestamp=20180101082355&mobileNumber=639995671234`
 
-+ Parameters
-    + apiKey (string) - User API key
-    + apiSecret (string) - User secret key
-    + from (string) - Sender ID
-    + to (string) - Recipient 
-    + text (optional, string) - The actual text message
-    + type (optional, string) - Transactional or Promotional
-    + image (optional, url) - URL of the image
-    + caption (optional, string) - Label for the CTA button
-    + url (optional, url) - URL of the CTA button
-    + ttl (optional, integer) - Message lifetime in seconds
-    + dlrCallback (optional, url) - API endpoint
-    + eventCallback (optional, url) - Event API endpoint
-    + referenceId (optional, string) - Reference ID for the transaction.
-    <!--+ categoryId (optional, string) - Grouping ID for the transaction.-->
-    + sms_from (optional, string) - SMS Sender Name.
-    + sms_text (optional, string) - SMS Fallback message content.
-    <!--+ async (optional, boolean) - Asynchronuos mode-->
+        
++ Request
+
+    + Body
     
+            {
+                "from": "<senderId>",
+                "to": "<recipient>",
+                "text": "<message>",
+                "apiKey": "<apiKey>",
+                "apiSecret": "<apiSecret>"
+            }
+            
 + Response 200
 
     Received on malformed JSON in the request.
@@ -262,6 +256,8 @@ This allows you to send SMS to one local or international mobile number per requ
 
 
 **Request Parameters**
+
+Please use the request "Body" tab to send a request
 
 | Parameter     | Required | Data Type | Description           |
 | --------------| -------  | ------- | ------------------------------ |
@@ -320,18 +316,19 @@ the DLR notification would be:
 
 `http://example.com?_status=1&_id=248bfa2341293ad9sada&referenceId=123abc&_timestamp=20180101082355&from=PTXTrial&to=639995671234`
 
-+ Parameters
-    + apiKey (string) - User API key
-    + apiSecret (string) - User secret key
-    + from (string) - Sender ID
-    + to (string) - Recipient
-    + text (string) - The actual text message
-    + dlrReport (optional, boolean) - Flag to get DLR notification
-    + dlrCallback (optional, url) - API endpoint
-    + referenceId (optional, string) - Reference ID for the transaction.
-    <!-- + categoryId (optional, string) - Category ID for the transaction -->
-    <!--+ async (optional, boolean) - Asynchronuos mode-->
 
++ Request
+
+    + Body
+    
+            {
+                "from": "<senderId>",
+                "to": "<recipient>",
+                "text": "<message>",
+                "apiKey": "<apiKey>",
+                "apiSecret": "<apiSecret>"
+            }
+            
 + Response 200
 
     Received on malformed JSON in the request.
@@ -691,19 +688,18 @@ the DLR notification would be:
 
 `http://example.com?_status=1&_id=248bfa2341293ad9sada&_date=20180101082355&from=testsms&to=639151234567`
 
-+ Parameters
-    + apiKey (string) - User API key
-    + apiSecret (string) - User secret key
-    + from (string) - Sender ID
-    + to (string) - Recipient
-    + message (string) - The actual text message. `%code%` placeholder is required.
-    + codelength (optional, integer) - Length of the code to be generated
-    + codetype (optional, string) - Possible values: numeric, alpha, or alphanumeric
-    + expiration (optional, integer) - Code expiration in seconds. Min: 30, Max: 86400
-    + dlrReport (optional, boolean) - Flag to get DLR notification
-    + dlrCallback (optional, url) - DLR API endpoint
-    + referenceId (optional, string) - Reference ID for the transaction.
++ Request
 
+    + Body
+    
+            {
+                "apiKey": "<apiKey>",
+                "apiSecret": "<apiSecret>",
+                "from": "<senderId>",
+                "to": "<recipient>",
+                "message": "<message>"
+            }
+            
 + Response 200
 
     Received on malformed JSON in the request.
@@ -747,7 +743,17 @@ This allows you to verify a generated code.
 | id            |   Yes    | String  | Transaction ID. Value should match the ID generated for the generateCode request.|
 | code          |   Yes    | String   | Code to be validated.|
 
++ Request
 
+    + Body
+    
+            {
+                "apiKey": "<apiKey>",
+                "apiSecret": "<apiSecret>",
+                "id": "<transactionId>",
+                "code": "<code>"
+            }
+            
 + Parameters
     + apiKey (string) - User API key
     + apiSecret (string) - User secret key
@@ -854,17 +860,19 @@ the DLR notification would be:
 
 `http://example.com?_status=1&_id=248bfa2341293ad9sada&_date=20180101082355`
 
-+ Parameters
-    + apiKey (string) - User API key
-    + apiSecret (string) - User secret key
-    + fromEmail (string) - From email address
-    + to (string) - Recipient of the message
-    + subject (string) - The actual text message
-    + html (boolean) - Set to "1" if the content is HTML
-    + body (String) - Content of the message. `%Unsubscribe_Link%` is required if HTML is set to true
-    + groupName (String) - Your own grouping to the transaction
-    + dlrReport (optional, boolean) - Flag to get DLR notification
-    + dlrCallback (optional, url) - API endpoint
++ Request
+
+    + Body
+    
+            {
+                "apiSecret": "<apiSecret>",
+                "apiKey": "<apiKey>",
+                "fromEmail": "<email address>",
+                "to": "<recipient>",
+                "subject": "<message title>",
+                "html": "<html mode>",
+                "body": "<message>"
+            }
 
 + Response 200
 
