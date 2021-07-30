@@ -908,7 +908,8 @@ This section shows the delivery and event Status codes and description.
 | Code | Description                                                    |
 | ---- | -------------------------------------------------------------- |
 | 1    | Delivered. The message has been delivered via Viber.           |
-| 2    | Expired, Rejected or Country not permitted. The message has been expired, rejected or recipient's country is not permitted. |
+| 2    | Expired. The message has been expired                          |
+| 16   | Rejected or Country not permitted. The message has been rejected or recipient's country is not permitted. |
 
 
 **Event Status:**
@@ -1009,6 +1010,11 @@ This section shows the Send and DLR Status codes and description.
 | 200229 | Transaction has expired.                                 |
 | 200230 | `code` is required.                                      |
 | 200231 | `code` is invalid.                                       |
+| 200232 | Caption length exceeded.                                 |
+| 200233 | Invalid content combination.                             |
+| 200234 | Invalid transaction type.                                |
+| 200235 | Invalid TTL value.                                       |
+| 200236 | Channel ID must be whitelisted to the account.           |
 | 200301 | The message is not routable.                             |
 | 40001 | Unauthorized Access.                                      |
 | 40002 | Too many requests.                                        |
