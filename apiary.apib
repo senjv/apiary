@@ -138,7 +138,7 @@ This allows you to send Viber Business Message to one local mobile number per re
 
 **DLR Notification**
 
-Promotexter can send DLR notifications to your own APIs if you have enabled it on your Account settings or added as a parameter in the request.
+Promotexter can send DLR notifications to your own APIs if you have added `dlrCallback` as a parameter in the request.
 
 Only one DLR notification will be sent per request regardless if the transaction was fallback to SMS.
 
@@ -163,6 +163,10 @@ the DLR notification would be:
 
 `http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&timestamp=20180101082355&from=54321&transactionType=viber&to=639995671234`
 
+Note that if your transaction is rejected due to certain errors the DLR notification would be:
+
+`http://example.com?status=2&id=248bfa2341293ad9sada&timestamp=20180101082355&mobileNumber=639995671234&errorCode=200236`
+
 If you have a callbackUrl without the placeholders:
 
 `http://example.com`
@@ -170,6 +174,10 @@ If you have a callbackUrl without the placeholders:
 the DLR notification would be:
 
 `http://example.com?_status=1&_id=248bfa2341293ad9sada&referenceId=123abc&_timestamp=20180101082355&from=54321&to=639995671234`
+
+Note that if your transaction is rejected due to certain errors the DLR notification would be:
+
+`http://example.com?_status=2&_id=248bfa2341293ad9sada&_timestamp=20180101082355&mobileNumber=639995671234&errorCode=200236`
 
 
 
@@ -202,6 +210,7 @@ the event notification would be:
 
 `http://example.com?_status=8000&_id=248bfa2341293ad9sada&_timestamp=20180101082355&mobileNumber=639995671234`
 
+**
         
 + Request
 
