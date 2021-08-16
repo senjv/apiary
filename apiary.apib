@@ -163,7 +163,7 @@ the DLR notification would be:
 
 `http://example.com?status=1&id=248bfa2341293ad9sada&referenceId=123abc&timestamp=20180101082355&from=54321&transactionType=viber&to=639995671234`
 
-Note that if your transaction is rejected due to certain errors the DLR notification would be:
+Note: If your transaction is rejected due to certain errors the DLR notification would be:
 
 `http://example.com?status=2&id=248bfa2341293ad9sada&timestamp=20180101082355&mobileNumber=639995671234&errorCode=200236`
 
@@ -175,7 +175,7 @@ the DLR notification would be:
 
 `http://example.com?_status=1&_id=248bfa2341293ad9sada&referenceId=123abc&_timestamp=20180101082355&from=54321&to=639995671234`
 
-Note that if your transaction is rejected due to certain errors the DLR notification would be:
+Note: If your transaction is rejected due to certain errors the DLR notification would be:
 
 `http://example.com?_status=2&_id=248bfa2341293ad9sada&_timestamp=20180101082355&mobileNumber=639995671234&errorCode=200236`
 
@@ -266,7 +266,6 @@ This allows you to send SMS to one local or international mobile number per requ
 
 **Request Parameters**
 
-Please use the request "Body" tab to send a request
 
 | Parameter     | Required | Data Type | Description           |
 | --------------| -------  | ------- | ------------------------------ |
@@ -391,10 +390,10 @@ This allows you to retrieve transactions via a single API call.
 | filter[dateCreatedLt] | No                        | Filter transactions with creation date lesser than this value.  |
 | filter[transactionId] | No                        | Specific transactionId lookup  |
 | filter[referenceId]   | No                        | Specific referenceId lookup  |
-<!-- | filter[categoryId]    | No                        | Specific categoryId lookup  | -->
 | filter[requestId]     | No                        | Specific requestId lookup  |
 | filter[from]          | No                        | Filter by "from" parameter |
 | filter[to]            | No                        | Filter by "to" parameter  |
+<!-- | filter[categoryId]    | No                        | Specific categoryId lookup  | -->
 
 
 + Parameters
@@ -1039,4 +1038,4 @@ This section shows the Send and DLR Status codes and description.
 
 *40004 will contain the specific error message detected.*
 
-*Updated as of 10 August 2021. For inquiries, please reach us at support@promotexter.com
+*Updated as of 13 August 2021. For inquiries, please reach us at support@promotexter.com
