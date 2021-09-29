@@ -75,7 +75,7 @@ This allows you to inquire your current account balance.
 
 # Group Viber Business Messaging with SMS Fallback
 
-## Single Viber Transaction [/viber/send{?apiKey}{?apiSecret}{?from}{?to}{?text}{?type}{?image}{?caption}{?url}{?ttl}{?dlrCallback}{?eventCallback}{?referenceId}{?sms_from}{?sms_text}{?filter}]
+## Single Viber Transaction [/viber/send]
 
 This allows you to send Viber Business Message to one local mobile number per request with an option to send the message as SMS when recipient cannot be reached through Viber after the indicated message lifetime.
 
@@ -211,18 +211,22 @@ the event notification would be:
 `http://example.com?_status=8000&_id=248bfa2341293ad9sada&_timestamp=20180101082355&mobileNumber=639995671234`
 
 **
-        
-+ Request
 
-    + Body
++ Request (application/json)
+
+     ```js
     
             {
+                "apiKey": "<apiKey>",
+                "apiSecret": "<apiSecret>",
                 "from": "<senderId>",
                 "to": "<recipient>",
                 "text": "<message>",
-                "apiKey": "<apiKey>",
-                "apiSecret": "<apiSecret>"
+                "image": "<image>",
+                "caption": "<caption>",
+                "url": "<url>"
             }
+    ```
             
 + Response 200
 
@@ -231,14 +235,20 @@ the event notification would be:
     + Body
         
             {
-                "transactionId": "ab123524523cde134342343211342"
+                "transactionId": "ab123524523cde134342343211342",
+                "requestId": "cbc123412341234123412341234"
             }
         
++ Response 422 (application/json)
 
+            {
+                "code": "<Error code>"
+                "message": "<Error message>"
+            }
 
 # Group SMS Messaging
 
-## Single SMS Transaction [/sms/send{?apiKey}{?apiSecret}{?from}{?to}{?text}{?dlrReport}{?dlrCallback}{?pageSize}{?pageNumber}{?sortColumn}{?id}{?referenceId}{?requestId}{?filter}{?async}{?priority}]
+## Single SMS Transaction [/sms/send]
 
 This allows you to send SMS to one local or international mobile number per request.
 
@@ -325,17 +335,17 @@ the DLR notification would be:
 `http://example.com?_status=1&_id=248bfa2341293ad9sada&referenceId=123abc&_timestamp=20180101082355&from=PTXTrial&to=639995671234`
 
 
-+ Request
++ Request (application/json)
 
-    + Body
-    
+     ```js
             {
+                "apiKey": "<apiKey>",
+                "apiSecret": "<apiSecret>",
                 "from": "<senderId>",
                 "to": "<recipient>",
-                "text": "<message>",
-                "apiKey": "<apiKey>",
-                "apiSecret": "<apiSecret>"
+                "text": "<message>"
             }
+     ```
             
 + Response 200
 
@@ -640,7 +650,7 @@ Set up your account webhook with the following placeholders:
 
 # Group Two-Factor Authentication Service
 
-## Generate Code [/twofa/generate{?apiKey}{?apiSecret}{?from}{?to}{?message}{?codelength}{?codetype}{?expiration}{?dlrReport}{?dlrCallback}{?pageSize}{?pageNumber}{?sortColumn}{?id}{?referenceId}{?requestId}{?filter}{?async}{?priority}]
+## Generate Code [/twofa/generate]
 
 This allows you to generate code and send SMS to one local or international mobile number per transaction. <a href="https://promotexter.com/2fa-verify/"><u>Learn more.</u></a>
 
@@ -696,10 +706,8 @@ the DLR notification would be:
 
 `http://example.com?_status=1&_id=248bfa2341293ad9sada&_date=20180101082355&from=testsms&to=639151234567`
 
-+ Request
-
-    + Body
-    
++ Request (application/json)
+     ```js
             {
                 "apiKey": "<apiKey>",
                 "apiSecret": "<apiSecret>",
@@ -707,6 +715,7 @@ the DLR notification would be:
                 "to": "<recipient>",
                 "message": "<message>"
             }
+     ```
             
 + Response 200
 
@@ -751,9 +760,8 @@ This allows you to verify a generated code.
 | id            |   Yes    | String  | Transaction ID. Value should match the ID generated for the generateCode request.|
 | code          |   Yes    | String   | Code to be validated.|
 
-+ Request
-
-    + Body
++ Request (application/json)
+     ```js
     
             {
                 "apiKey": "<apiKey>",
@@ -761,7 +769,7 @@ This allows you to verify a generated code.
                 "id": "<transactionId>",
                 "code": "<code>"
             }
-            
+     ```   
 + Parameters
     + apiKey (string) - User API key
     + apiSecret (string) - User secret key
@@ -789,7 +797,7 @@ This allows you to verify a generated code.
 
 # Group Email Messaging
 
-## Single Email Transaction [/email{?apiKey}{?apiSecret}{?fromEmail}{?to}{?subject}{?html}{?body}{?groupName}{?dlrReport}{?dlrCallback}{?pageSize}{?pageNumber}{?sortColumn}{?id}{?referenceId}{?requestId}{?filter}{?async}{?priority}]
+## Single Email Transaction [/email]
 
 You can use the API to send email to one recipient per transaction.
 
@@ -868,19 +876,18 @@ the DLR notification would be:
 
 `http://example.com?_status=1&_id=248bfa2341293ad9sada&_date=20180101082355`
 
-+ Request
-
-    + Body
-    
++ Request (application/json)
+     ```js
             {
-                "apiSecret": "<apiSecret>",
                 "apiKey": "<apiKey>",
+                "apiSecret": "<apiSecret>",
                 "fromEmail": "<email address>",
                 "to": "<recipient>",
                 "subject": "<message title>",
                 "html": "<html mode>",
                 "body": "<message>"
             }
+     ```
 
 + Response 200
 
