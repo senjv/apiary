@@ -151,7 +151,7 @@ Your callback URL must contain the following placeholder values:
 | %r          | referenceId     | Placeholder for the reference ID if it has value.   |
 | %d          | timestamp       | Placeholder for the date and time the DLR is received (UTC).        |
 | %f          | from            | Placeholder for the Viber ID |
-| %tr         | transactionType | Placeholder for the type of channel to which the transaction is delivered.|
+| %tr         | transactionType | Placeholder for the type of channel to which the transaction is delivered. (Option to add the transaction type on your DLR notification without including this placeholder is available. To activate, contact support@promotexter.com)|
 | %t          | to              | Placeholder for the recipient's mobile number |
 <!--| %c          | categoryId      | Yes       | Placeholder for the category ID |-->
 
@@ -208,9 +208,9 @@ If you have an event callbackUrl without the placeholders:
 
 the event notification would be:
 
-`http://example.com?_status=8000&_id=248bfa2341293ad9sada&_timestamp=20180101082355&mobileNumber=639995671234`
+`{"channel_id":"15067","channel_name":"Promotexter - Viber 2 way","content":"This is a test message.","mobile_number":"+639995671234","timestamp":"2021-12-01T03:30:55.310Z","transaction_id":"843"}`
 
-**
+
 
 + Request (application/json)
 
@@ -245,6 +245,25 @@ the event notification would be:
                 "code": "<Error code>"
                 "message": "<Error message>"
             }
+
+# Group 2-way Viber
+
+##Receive messages via a dedicated replyable unified Viber channel
+*Viber channel may be requested through your Account Manager (sales@promotexter.com)
+
+##Forward incoming messages to your webhook in real-time
+Set up your account webhook via Promotexter portal > Settings > 2-Way Viber
+
+If you have a webhook of:
+
+`https://example.com`
+
+the response would be: 
+
+`{"channel_id":"1234","channel_name":"Promotexter 2 way","content":"This is a test message.","mobile_number":"+639995671234","timestamp":"2021-12-01T03:30:55.310Z","transaction_id":"843"}`
+
+
+
 
 # Group SMS Messaging
 
@@ -314,7 +333,7 @@ Your callback URL must contain the following placeholder values:
 | %i | id | Placeholder for the transaction ID.                          |
 | %r | referenceId | Placeholder for the reference ID if it has value.   |
 | %d | timestamp | Placeholder for the date and time the DLR is received (UTC).        |
-| %tr | transactionType | Placeholder for the type of channel to which the transaction is delivered.|
+| %tr | transactionType | Placeholder for the type of channel to which the transaction is delivered. (Option to add the transaction type on your DLR notification without including this placeholder is available. To activate, contact support@promotexter.com)|
 | %f | from | Placeholder for the senderId.|
 | %t | to | Placeholder for the recipient's mobile number.|
 
@@ -648,6 +667,7 @@ Set up your account webhook with the following placeholders:
 | `%from%`      | from | Customer mobile number.                           |
 
 
+
 # Group Two-Factor Authentication Service
 
 ## Generate Code [/twofa/generate]
@@ -858,7 +878,7 @@ Your callback URL must contain the following placeholder values:
 | %s | status | DLR Status | Placeholder for DLR status code.            |
 | %i | id | Placeholder for the transaction ID.                          |
 | %d | date | Placeholder for the date the DLR is received (UTC).        |
-| %tr | transactionType | Placeholder for the type of channel to which the transaction is delivered.|
+| %tr | transactionType | Placeholder for the type of channel to which the transaction is delivered. (Option to add the transaction type on your DLR notification without including this placeholder is available. To activate, contact support@promotexter.com)|
 
 If you have a callbackUrl of:
 
@@ -1045,4 +1065,4 @@ This section shows the Send and DLR Status codes and description.
 
 *40004 will contain the specific error message detected.*
 
-*Updated as of 13 August 2021. For inquiries, please reach us at support@promotexter.com
+*Updated as of 20  December 2021. For inquiries, please reach us at support@promotexter.com
